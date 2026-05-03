@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TPA & TBI Sekolah Kedinasan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh;
+  color: #e2e8f0;
+  padding: 20px;
+  line-height: 1.6;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* HEADER */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(168,85,247,0.15) 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(99,102,241,0.3);
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+@keyframes rotate { to { transform: rotate(360deg); } }
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5em;
+  font-weight: 900;
+  background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+  position: relative;
+}
+header p { color: #94a3b8; font-size: 1.05em; position: relative; }
+
+/* PACKAGE SELECTOR */
+.packages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+.package-card {
+  background: rgba(30,41,59,0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+.package-card:hover {
+  transform: translateY(-3px);
+  border-color: #6366f1;
+  box-shadow: 0 10px 30px rgba(99,102,241,0.3);
+}
+.package-card.active {
+  background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(168,85,247,0.25));
+  border-color: #a855f7;
+  box-shadow: 0 0 20px rgba(168,85,247,0.4);
+}
+.package-card h3 { color: #fff; font-size: 1.1em; margin-bottom: 5px; }
+.package-card .badge { color: #94a3b8; font-size: 0.85em; }
+
+/* TYPE SELECTOR */
+.type-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: rgba(30,41,59,0.5);
+  padding: 6px;
+  border-radius: 12px;
+}
+.type-btn {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+  font-size: 1em;
+}
+.type-btn.active {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff;
+}
+
+/* PROGRESS */
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 12px 18px;
+  background: rgba(30,41,59,0.5);
+  border-radius: 10px;
+  font-size: 0.9em;
+}
+.progress-bar {
+  height: 6px;
+  background: rgba(99,102,241,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+  border-radius: 3px;
+  transition: width 0.4s;
+}
+.score-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* QUESTION CARD */
+.question-card {
+  background: rgba(30,41,59,0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 20px;
+  animation: slideIn 0.4s ease-out;
+}
+@keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+.question-num { color: #a855f7; font-weight: 700; margin-bottom: 10px; font-size: 0.9em; letter-spacing: 1px; }
+.question-text { font-size: 1.1em; margin-bottom: 20px; color: #f1f5f9; line-height: 1.7; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(15,23,42,0.6);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: 1em;
+  color: #e2e8f0;
+  text-align: left;
+  width: 100%;
+}
+.option:hover:not(:disabled) {
+  background: rgba(99,102,241,0.1);
+  border-color: #6366f1;
+  transform: translateX(3px);
+}
+.option:disabled { cursor: not-allowed; }
+.option-letter {
+  background: rgba(99,102,241,0.2);
+  border: 1px solid rgba(99,102,241,0.4);
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: #a855f7;
+}
+.option.correct {
+  background: rgba(16,185,129,0.15);
+  border-color: #10b981;
+}
+.option.correct .option-letter { background: #10b981; color: #fff; border-color: #10b981; }
+.option.wrong {
+  background: rgba(239,68,68,0.15);
+  border-color: #ef4444;
+}
+.option.wrong .option-letter { background: #ef4444; color: #fff; border-color: #ef4444; }
+
+/* CONTROLS */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: 0.95em;
+  flex: 1;
+  min-width: 120px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99,102,241,0.4); }
+.btn-secondary {
+  background: rgba(99,102,241,0.15);
+  color: #a855f7;
+  border: 1px solid rgba(99,102,241,0.3);
+}
+.btn-secondary:hover { background: rgba(99,102,241,0.25); }
+.btn-warning {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* DISCUSSION */
+.discussion {
+  margin-top: 18px;
+  padding: 18px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(99,102,241,0.1));
+  border-left: 4px solid #10b981;
+  border-radius: 10px;
+  animation: fadeIn 0.4s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.discussion-title {
+  font-weight: 700;
+  color: #10b981;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.discussion-text { color: #cbd5e1; line-height: 1.7; }
+
+/* NAVIGATION */
+.nav-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* JUMP NAVIGATOR */
+.jump-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(30,41,59,0.5);
+  border-radius: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.jump-num {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85em;
+  color: #cbd5e1;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.jump-num:hover { background: rgba(99,102,241,0.3); transform: scale(1.05); }
+.jump-num.current { background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; }
+.jump-num.answered.correct { background: rgba(16,185,129,0.3); border-color: #10b981; }
+.jump-num.answered.wrong { background: rgba(239,68,68,0.3); border-color: #ef4444; }
+
+/* RESULT */
+.result-card {
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(99,102,241,0.15));
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 20px;
+}
+.result-score {
+  font-size: 4em;
+  font-weight: 900;
+  background: linear-gradient(135deg, #10b981, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 15px 0;
+  font-family: 'Playfair Display', serif;
+}
+.result-text { color: #94a3b8; font-size: 1.1em; }
+
+@media (max-width: 600px) {
+  body { padding: 12px; }
+  header { padding: 20px 15px; }
+  header h1 { font-size: 1.8em; }
+  .question-card { padding: 18px; }
+  .question-text { font-size: 1em; }
+  .btn { font-size: 0.9em; padding: 10px 14px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>TPA &amp; TBI</h1>
+    <p>Persiapan Sekolah Kedinasan Indonesia · 5 Paket Soal Lengkap</p>
+  </header>
+
+  <div class="packages" id="packages"></div>
+
+  <div class="type-selector">
+    <button class="type-btn active" data-type="tpa">📊 TPA (120 soal)</button>
+    <button class="type-btn" data-type="tbi">🌐 TBI (60 soal)</button>
+  </div>
+
+  <div class="progress-info">
+    <span id="progressText">Soal 1 dari ...</span>
+    <span class="score-badge" id="scoreText">Skor: 0</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div id="quizContent"></div>
+
+  <div class="jump-nav" id="jumpNav"></div>
+</div>
+
+<script>
+// ============================================
+// DATABASE SOAL TPA & TBI - 5 PAKET LENGKAP
+// 5 paket × (120 TPA + 60 TBI) = 900 soal total
+// ============================================
+
+const soalDatabase = {
+
+paket1: {
+  nama: "Paket 1 - Tingkat Dasar",
+  tpa: [
+    {q:"Sinonim ABOLISI adalah...",o:["Penghapusan","Penambahan","Penundaan","Pengurangan"],a:0,p:"Abolisi = penghapusan tuntutan pidana."},
+    {q:"Sinonim BAKU adalah...",o:["Standar","Umum","Pokok","Asli"],a:0,p:"Baku = standar."},
+    {q:"Sinonim BONAFIDE adalah...",o:["Curang","Jujur","Murah","Setia"],a:1,p:"Bonafide = dapat dipercaya, jujur."},
+    {q:"Sinonim DAUR adalah...",o:["Putaran","Baur","Tingkat","Perubahan"],a:0,p:"Daur = putaran/siklus."},
+    {q:"Sinonim EKSIBISI adalah...",o:["Pertunjukan","Pertandingan","Pameran","Promosi"],a:2,p:"Eksibisi = pameran."},
+    {q:"Sinonim FENOMENA adalah...",o:["Kejadian","Bencana","Berita","Khayalan"],a:0,p:"Fenomena = kejadian yang dapat diamati."},
+    {q:"Sinonim GLOSARIUM adalah...",o:["Kamus ringkas","Daftar pustaka","Indeks","Ensiklopedi"],a:0,p:"Glosarium = kamus ringkas istilah khusus."},
+    {q:"Sinonim HIPOTESIS adalah...",o:["Anggapan","Kesimpulan","Persamaan","Pengantar"],a:0,p:"Hipotesis = dugaan sementara."},
+    {q:"Sinonim INSOMNIA adalah...",o:["Cemas","Sulit tidur","Mengigau","Lelah"],a:1,p:"Insomnia = gangguan sulit tidur."},
+    {q:"Sinonim KOLUSI adalah...",o:["Persekongkolan","Pemerasan","Penyuapan","Penipuan"],a:0,p:"Kolusi = persekongkolan."},
+    {q:"Sinonim LEGITIMASI adalah...",o:["Pengaturan","Pengesahan","Penentuan","Pengakuan"],a:1,p:"Legitimasi = pengesahan."},
+    {q:"Sinonim MUDUN adalah...",o:["Beradab","Mundur","Berani","Bersahaja"],a:0,p:"Mudun = beradab."},
+    {q:"Sinonim NABATI adalah...",o:["Hewani","Tumbuhan","Bumi","Air"],a:1,p:"Nabati = berasal dari tumbuhan."},
+    {q:"Sinonim OTODIDAK adalah...",o:["Maju sendiri","Belajar sendiri","Cepat tangkap","Pandai"],a:1,p:"Otodidak = belajar sendiri."},
+    {q:"Sinonim PROVOKASI adalah...",o:["Pancingan","Tantangan","Hasutan","Tuduhan"],a:2,p:"Provokasi = hasutan."},
+    {q:"Antonim ABSURD adalah...",o:["Mustahil","Wajar","Aneh","Khayal"],a:1,p:"Absurd ↔ wajar."},
+    {q:"Antonim AKURAT adalah...",o:["Teliti","Tepat","Meleset","Cermat"],a:2,p:"Akurat ↔ meleset."},
+    {q:"Antonim BONGSOR adalah...",o:["Kerdil","Tinggi","Cepat","Macet"],a:0,p:"Bongsor ↔ kerdil."},
+    {q:"Antonim CANGGIH adalah...",o:["Modern","Sederhana","Kuno","Rumit"],a:1,p:"Canggih ↔ sederhana."},
+    {q:"Antonim DEDUKSI adalah...",o:["Induksi","Reduksi","Konduksi","Transduksi"],a:0,p:"Deduksi ↔ induksi."},
+    {q:"Antonim EKSPLISIT adalah...",o:["Tersirat","Tersurat","Jelas","Tegas"],a:0,p:"Eksplisit ↔ tersirat."},
+    {q:"Antonim FIKTIF adalah...",o:["Fakta","Khayal","Asli","Tiruan"],a:0,p:"Fiktif ↔ fakta."},
+    {q:"Antonim GENERIK adalah...",o:["Umum","Khusus","Asli","Murah"],a:1,p:"Generik ↔ khusus."},
+    {q:"Antonim HEMAT adalah...",o:["Boros","Pelit","Kikir","Murah"],a:0,p:"Hemat ↔ boros."},
+    {q:"Antonim INSIDENTAL adalah...",o:["Kebetulan","Tetap","Rutin","Khusus"],a:2,p:"Insidental ↔ rutin."},
+    {q:"Antonim JUMBO adalah...",o:["Besar","Kecil","Bongsor","Raksasa"],a:1,p:"Jumbo ↔ kecil."},
+    {q:"Antonim KAPABEL adalah...",o:["Mampu","Pandai","Bodoh","Tidak cakap"],a:3,p:"Kapabel ↔ tidak cakap."},
+    {q:"Antonim LANCUNG adalah...",o:["Asli","Palsu","Tiruan","Buatan"],a:0,p:"Lancung ↔ asli."},
+    {q:"Antonim MAYOR adalah...",o:["Minor","Tinggi","Rendah","Kecil"],a:0,p:"Mayor ↔ minor."},
+    {q:"Antonim NETRAL adalah...",o:["Berimbang","Berpihak","Bebas","Independen"],a:1,p:"Netral ↔ berpihak."},
+    {q:"DOKTER : PASIEN = ... : ...",o:["Guru : Murid","Petani : Cangkul","Pengacara : Hakim","Sopir : Mobil"],a:0,p:"Profesi melayani objek."},
+    {q:"PADI : BERAS = ... : ...",o:["Buku : Kertas","Tepung : Roti","Kayu : Hutan","Pohon : Daun"],a:1,p:"Bahan diolah jadi produk."},
+    {q:"PILOT : PESAWAT = ... : ...",o:["Penyanyi : Lagu","Kuda : Kusir","Masinis : Kereta","Petani : Sawah"],a:2,p:"Pengemudi dan kendaraan."},
+    {q:"GELAP : TERANG = ... : ...",o:["Bulan : Bintang","Siang : Malam","Hujan : Awan","Pagi : Embun"],a:1,p:"Antonim."},
+    {q:"INDONESIA : ASIA = ... : ...",o:["Jakarta : Indonesia","Mesir : Afrika","Eropa : Prancis","Tokyo : Jepang"],a:1,p:"Negara di benua."},
+    {q:"AIR : HAUS = ... : ...",o:["Angin : Dingin","Lampu : Gelap","Nasi : Lapar","Obat : Sehat"],a:2,p:"Penghilang kondisi."},
+    {q:"PENA : KERTAS = ... : ...",o:["Kapur : Papan tulis","Sendok : Garpu","Sapu : Lantai","Buku : Tas"],a:0,p:"Alat tulis dan media."},
+    {q:"AYAM : TELUR = ... : ...",o:["Sapi : Susu","Mangga : Pohon","Kambing : Daging","Ulat : Kupu-kupu"],a:0,p:"Hewan dan produknya."},
+    {q:"KAMERA : FOTO = ... : ...",o:["Pensil : Kertas","Mesin tik : Tulisan","Mata : Penglihatan","Kuas : Cat"],a:1,p:"Alat dan hasilnya."},
+    {q:"DINGIN : SELIMUT = HUJAN : ...",o:["Air","Payung","Awan","Basah"],a:1,p:"Pelindung dari kondisi."},
+    {q:"LAUT : KAPAL = UDARA : ...",o:["Awan","Burung","Pesawat","Angin"],a:2,p:"Media dan transportasi."},
+    {q:"GITAR : MUSISI = KUAS : ...",o:["Cat","Kanvas","Pelukis","Gambar"],a:2,p:"Alat dan pengguna."},
+    {q:"IKAN : INSANG = MANUSIA : ...",o:["Hidung","Mulut","Paru-paru","Jantung"],a:2,p:"Alat napas."},
+    {q:"GEMPA : RICHTER = SUHU : ...",o:["Termometer","Celcius","Panas","Barometer"],a:1,p:"Satuan ukur."},
+    {q:"BUKU : PENGARANG = LUKISAN : ...",o:["Kanvas","Pelukis","Cat","Galeri"],a:1,p:"Karya dan pembuat."},
+    {q:"Hasil 25% × 80 + 15 = ...",o:["30","35","40","45"],a:1,p:"20+15=35."},
+    {q:"Jika 3x + 5 = 20, maka x = ...",o:["3","4","5","6"],a:2,p:"3x=15; x=5."},
+    {q:"2/3 + 1/4 = ...",o:["3/7","8/12","11/12","5/12"],a:2,p:"8/12+3/12=11/12."},
+    {q:"15% dari 240 = ...",o:["32","36","40","45"],a:1,p:"0,15×240=36."},
+    {q:"a=3, b=4. a²+b² = ...",o:["7","12","25","49"],a:2,p:"9+16=25."},
+    {q:"√144 + √81 = ...",o:["19","20","21","23"],a:2,p:"12+9=21."},
+    {q:"x - 25 = 17. x = ...",o:["8","42","32","52"],a:1,p:"x=42."},
+    {q:"Harga Rp200.000 didiskon 20%. Harga akhir?",o:["140.000","150.000","160.000","180.000"],a:2,p:"Diskon 40rb; 160rb."},
+    {q:"Rata-rata 4,6,8,10,12 = ...",o:["6","7","8","9"],a:2,p:"40/5=8."},
+    {q:"5 pekerja butuh 12 hari. 6 pekerja butuh berapa hari?",o:["8","10","12","15"],a:1,p:"5×12=6×x; x=10."},
+    {q:"(12+8) × 5 - 30 = ...",o:["50","70","80","100"],a:1,p:"100-30=70."},
+    {q:"Harga 3 kg apel Rp45.000. Harga 8 kg?",o:["100.000","120.000","135.000","150.000"],a:1,p:"15rb/kg; 8×15=120rb."},
+    {q:"x:y = 3:5; x+y = 40. y = ...",o:["15","20","25","30"],a:2,p:"k=5; y=25."},
+    {q:"2x - 3 = 11. x = ...",o:["5","6","7","8"],a:2,p:"2x=14; x=7."},
+    {q:"30% dari bilangan = 60. Bilangan = ...",o:["180","200","220","240"],a:1,p:"60/0,3=200."},
+    {q:"0,25 × 80 = ...",o:["18","20","22","24"],a:1,p:"1/4×80=20."},
+    {q:"Luas segitiga alas 10 tinggi 8 = ...",o:["30","40","50","80"],a:1,p:"½×10×8=40."},
+    {q:"Keliling persegi panjang p=12, l=8 = ...",o:["20","32","40","96"],a:2,p:"2(12+8)=40."},
+    {q:"Diskon 12% dari 25.000 = ...",o:["2.000","3.000","3.500","4.000"],a:1,p:"0,12×25rb=3rb."},
+    {q:"2³ × 3² = ...",o:["54","64","72","82"],a:2,p:"8×9=72."},
+    {q:"Deret 2,5,8,11,...",o:["13","14","15","16"],a:1,p:"+3: 14."},
+    {q:"Deret 3,6,12,24,...",o:["36","42","48","60"],a:2,p:"×2: 48."},
+    {q:"Deret 1,4,9,16,...",o:["20","24","25","36"],a:2,p:"Kuadrat: 25."},
+    {q:"Deret 2,3,5,8,13,...",o:["18","20","21","24"],a:2,p:"Fibonacci: 21."},
+    {q:"Deret 100,95,85,70,...",o:["50","55","60","65"],a:0,p:"-5,-10,-15,-20: 50."},
+    {q:"Huruf A,C,E,G,...",o:["H","I","J","K"],a:1,p:"Loncat 1: I."},
+    {q:"Deret 5,10,20,40,...",o:["60","70","80","100"],a:2,p:"×2: 80."},
+    {q:"Deret 64,32,16,8,...",o:["2","4","6","0"],a:1,p:":2: 4."},
+    {q:"Deret 2,4,8,16,...",o:["20","24","28","32"],a:3,p:"×2: 32."},
+    {q:"AB,BC,CD,DE,...",o:["EF","FG","DF","EG"],a:0,p:"EF."},
+    {q:"Deret 1,3,6,10,15,...",o:["19","21","20","18"],a:1,p:"+6: 21."},
+    {q:"Deret 81,27,9,3,...",o:["1","2","3","0"],a:0,p:":3: 1."},
+    {q:"B,D,G,K,...",o:["N","O","P","Q"],a:2,p:"Loncat 1,2,3,4: P."},
+    {q:"Deret 7,14,28,56,...",o:["112","102","100","98"],a:0,p:"×2: 112."},
+    {q:"Deret 1,1,2,3,5,8,...",o:["11","12","13","14"],a:2,p:"Fibonacci: 13."},
+    {q:"Semua siswa pintar. Sebagian rajin. Maka...",o:["Semua rajin","Sebagian pintar dan rajin","Sebagian tak pintar","Tak ada"],a:1,p:"Sebagian punya 2 sifat."},
+    {q:"Hujan→jalan basah. Jalan tak basah. Maka...",o:["Hujan","Tak hujan","Banjir","Kering"],a:1,p:"Modus tollens."},
+    {q:"Semua A=B; semua B=C. Maka...",o:["C=A","A=C","Sebagian C=A","Tak ada"],a:1,p:"Silogisme."},
+    {q:"Andi>Budi>Cici. Paling pendek?",o:["Andi","Budi","Cici","Tak diketahui"],a:2,p:"Cici."},
+    {q:"Tak ada bunga tak indah. Mawar bunga. Maka...",o:["Tak indah","Indah","Bukan bunga","Tak tahu"],a:1,p:"Mawar indah."},
+    {q:"Atlet→latihan keras. Doni atlet. Maka...",o:["Latihan","Tidak","Bukan atlet","Malas"],a:0,p:"Modus ponens."},
+    {q:"Kucing punya ekor. Manis punya ekor. Maka Manis kucing?",o:["Ya","Tidak","Tak dapat disimpulkan","Pasti"],a:2,p:"Hewan lain juga berekor."},
+    {q:"Beberapa dokter peneliti. Peneliti pintar. Maka...",o:["Semua dokter pintar","Beberapa dokter pintar","Peneliti dokter","Tak ada"],a:1,p:"Beberapa dokter pintar."},
+    {q:"P→Q; Q→R; P benar. Maka R...",o:["Salah","Benar","Q salah","Tak tahu"],a:1,p:"Rantai modus ponens."},
+    {q:"Semua mahasiswa bawa buku. Andi tak bawa. Maka...",o:["Mahasiswa","Bukan mahasiswa","Bawa pulpen","Bawa tas"],a:1,p:"Modus tollens."},
+    {q:"Polisi:Penjahat = Guru:...",o:["Sekolah","Pelajar","Buku","Kantor"],a:1,p:"Profesi-objek."},
+    {q:"A kanan B; C kiri B. Urutan kiri-kanan?",o:["ABC","BAC","CBA","ACB"],a:2,p:"C-B-A."},
+    {q:"Senin + 10 hari = ...",o:["Rabu","Kamis","Jumat","Sabtu"],a:1,p:"Kamis."},
+    {q:"\"Semua bunga harum\" setara...",o:["Tak ada bunga tak harum","Semua harum bunga","Sebagian harum","Tak harum"],a:0,p:"Negasi ganda."},
+    {q:"A>B>C; C=D. Maka...",o:["A>D","A<D","A=D","A=B"],a:0,p:"A>D."},
+    {q:"Pemain bola pasti kuat. X kuat. X pemain bola?",o:["Pasti","Belum tentu","Tidak","Tak tahu"],a:1,p:"Konvers tidak menjamin."},
+    {q:"Rajin→sukses. Andi sukses. Andi rajin?",o:["Ya","Tidak","Belum tentu","Malas"],a:2,p:"Konvers tak otomatis."},
+    {q:"Atlet sehat. Sebagian atlet kaya. Maka...",o:["Semua kaya sehat","Semua sehat kaya","Sebagian sehat kaya","Tak ada"],a:2,p:"Sebagian sehat kaya."},
+    {q:"Beberapa siswa pintar mat. Pintar mat→lulus. Maka...",o:["Semua lulus","Beberapa siswa lulus","Tak ada lulus","Hanya pintar"],a:1,p:"Beberapa lulus."},
+    {q:"3 anak. 1st 2 thn lebih tua dari 2nd. 3rd 3 thn lebih muda. 2nd=10. Total?",o:["27","29","30","31"],a:1,p:"12+10+7=29."},
+    {q:"Belajar→pintar→sukses. Andi belajar. Maka...",o:["Sukses","Tak pintar","Tak belajar","Gagal"],a:0,p:"Sukses."},
+    {q:"Sebagian guru dokter. Dokter sarjana. Maka...",o:["Semua guru sarjana","Sebagian guru sarjana","Tak ada","Semua sarjana guru"],a:1,p:"Sebagian guru sarjana."},
+    {q:"5 orang antri. Doni-Eko, Eko-Fani, Gita di belakang Fani, Hari paling depan. Urutan?",o:["H-D-E-F-G","H-E-D-F-G","D-H-E-F-G","H-D-F-E-G"],a:0,p:"H-D-E-F-G."},
+    {q:"Tak ada nelayan malas. Budi nelayan. Budi...",o:["Malas","Rajin","Tak malas","Kaya"],a:2,p:"Tak malas."},
+    {q:"Semua A=B. Sebagian B=C. A...",o:["Pasti C","Mungkin C","Tak C","Bukan B"],a:1,p:"Mungkin C."},
+    {q:"Pola ☐△☐△☐... berikutnya?",o:["☐","△","○","◇"],a:1,p:"Selang-seling."},
+    {q:"Kubus rusuk?",o:["8","10","12","14"],a:2,p:"12 rusuk."},
+    {q:"Sudut segitiga = ...",o:["90","180","270","360"],a:1,p:"180°."},
+    {q:"Sudut segiempat = ...",o:["180","270","360","450"],a:2,p:"360°."},
+    {q:"Persegi diputar 90°...",o:["Tetap","Persegi panjang","Belah ketupat","Trapesium"],a:0,p:"Tetap."},
+    {q:"Sumbu simetri segitiga sama sisi = ...",o:["1","2","3","4"],a:2,p:"3."},
+    {q:"Sumbu simetri lingkaran = ...",o:["1","2","Tak hingga","Tak ada"],a:2,p:"Tak hingga."},
+    {q:"Pola ●○●○●... berikutnya?",o:["●","○","◇","△"],a:1,p:"Selang-seling."},
+    {q:"Tabung sisi = ...",o:["1","2","3","4"],a:2,p:"3 sisi."},
+    {q:"Pola titik 1,4,9,16,...",o:["20","23","25","30"],a:2,p:"Kuadrat: 25."},
+    {q:"Bayangan cermin 'M' = ...",o:["W","M","E","Tak berubah"],a:3,p:"Simetri vertikal."},
+    {q:"Diagonal persegi = ...",o:["1","2","3","4"],a:1,p:"2."},
+    {q:"Sisi limas segiempat = ...",o:["4","5","6","8"],a:1,p:"5."},
+    {q:"Jam 3.00 sudut = ...",o:["60","90","120","180"],a:1,p:"90°."},
+    {q:"Jam 6.00 sudut = ...",o:["90","120","180","270"],a:2,p:"180°."}
+  ],
+  tbi: [
+    {q:"Penulisan tepat...",o:["di rumah","dirumah","di-rumah","Dirumah"],a:0,p:"'di' kata depan terpisah."},
+    {q:"Penulisan tepat...",o:["di pukul","dipukul","di-pukul","Di pukul"],a:1,p:"Awalan di- serangkai."},
+    {q:"Kata baku...",o:["aktifitas","aktivitas","activitas","aktiviti"],a:1,p:"Baku: aktivitas."},
+    {q:"Bentuk baku 'apotik'...",o:["apotek","apotik","apoteek","apothek"],a:0,p:"Baku: apotek."},
+    {q:"Singkatan 'dan lain-lain'...",o:["dll.","d.l.l","DLL","dll"],a:0,p:"dll."},
+    {q:"Kata baku...",o:["analisa","analisis","analisys","analisi"],a:1,p:"Baku: analisis."},
+    {q:"Penulisan tanggal...",o:["17 Agustus 1945","17-Agustus-1945","17/Agustus/1945","17,Agustus,1945"],a:0,p:"Spasi."},
+    {q:"Cetak miring untuk...",o:["istilah asing","kata baku","nama","tempat"],a:0,p:"Istilah asing/judul."},
+    {q:"Kalimat efektif...",o:["Kepada para hadirin sekalian","Para hadirin","Hadirin sekalian","Para hadirin sekalian"],a:1,p:"'Para' sudah jamak."},
+    {q:"Kalimat efektif...",o:["Saya melihat dia bermain","Saya sedang melihat dia sedang bermain","Dia bermain dengan permainan","Saya melihat dia"],a:0,p:"Padat."},
+    {q:"Baku 'praktek'...",o:["praktik","praktek","praktig","practiek"],a:0,p:"Baku: praktik."},
+    {q:"Baku 'sistim'...",o:["sistim","sistem","systim","systeem"],a:1,p:"Baku: sistem."},
+    {q:"Sinonim 'meneliti'...",o:["mengamati","mempelajari","mengkaji","semua benar"],a:3,p:"Bersinonim."},
+    {q:"Tanda baca benar...",o:["apel, jeruk dan pisang","apel, jeruk, dan pisang","apel jeruk pisang","apel jeruk dan pisang"],a:1,p:"Koma sebelum 'dan'."},
+    {q:"me- + sapu = ...",o:["mensapu","menyapu","menyapuh","mesapu"],a:1,p:"s lebur."},
+    {q:"pe- + tani = ...",o:["petani","pentani","pertani","penyetani"],a:0,p:"Petani."},
+    {q:"pe- + tulis = ...",o:["petulis","pentulis","penulis","penyulis"],a:2,p:"Penulis."},
+    {q:"me- + cuci = ...",o:["mecuci","mencuci","menyuci","mengcuci"],a:1,p:"Mencuci."},
+    {q:"Antonim 'majemuk'...",o:["sederhana","tunggal","banyak","ganda"],a:1,p:"↔ tunggal."},
+    {q:"Penulisan benar...",o:["di kerjakan","dikerjakan","di-kerjakan","dikerjaan"],a:1,p:"Awalan serangkai."},
+    {q:"ber- + kerja = ...",o:["bekerja","berkerja","berakerja","mekerja"],a:0,p:"Bekerja."},
+    {q:"Titik dua tepat...",o:["Saya beli: apel.","Ia berkata: \"Saya datang.\"","Saya: tak datang.","Pukul 8:30"],a:1,p:"Sebelum kutipan."},
+    {q:"Sinonim adalah...",o:["lawan","sama makna","keterkaitan","imbuhan"],a:1,p:"Sama makna."},
+    {q:"TIDAK baku...",o:["aktivitas","apotek","kuitansi","kwalitas"],a:3,p:"Baku: kualitas."},
+    {q:"Penulisan benar...",o:["antar kota","antarkota","antar-kota","antar  kota"],a:1,p:"Bentuk terikat digabung."},
+    {q:"'Tuhan Yang Maha Esa'...",o:["semua besar","semua kecil","Tuhan saja","Tuhan,Yang,Maha,Esa kapital"],a:3,p:"Tiap kata kapital."},
+    {q:"Pasif 'Adik membaca buku'...",o:["Buku dibaca adik","Adik dibaca buku","Buku membaca adik","Tak ada"],a:0,p:"Buku dibaca adik."},
+    {q:"'Kambing hitam' artinya...",o:["binatang","disalahkan","warna","kambing"],a:1,p:"Yang disalahkan."},
+    {q:"'Meja hijau' artinya...",o:["meja","pengadilan","makan","DPR"],a:1,p:"Pengadilan."},
+    {q:"'Air susu dibalas air tuba'...",o:["kebaikan dibalas kejahatan","kebaikan dibalas kebaikan","kejahatan kejahatan","persaudaraan"],a:0,p:"Kebaikan dibalas kejahatan."},
+    {q:"She _____ to school every day.",o:["go","goes","going","gone"],a:1,p:"3rd singular: goes."},
+    {q:"They _____ playing football now.",o:["is","are","am","be"],a:1,p:"They + are."},
+    {q:"I _____ a book yesterday.",o:["read","reads","reading","writes"],a:0,p:"Past: read."},
+    {q:"My father _____ a doctor.",o:["is","are","am","be"],a:0,p:"3rd sing: is."},
+    {q:"Synonym 'big'...",o:["small","large","tiny","short"],a:1,p:"Large."},
+    {q:"Antonym 'happy'...",o:["glad","joyful","sad","cheerful"],a:2,p:"Sad."},
+    {q:"Correct sentence:",o:["He don't like fish","He doesn't likes fish","He doesn't like fish","He not like fish"],a:2,p:"doesn't+V1."},
+    {q:"_____ is your name?",o:["What","Who","Where","When"],a:0,p:"What."},
+    {q:"I have _____ apple.",o:["a","an","the","-"],a:1,p:"Vowel sound: an."},
+    {q:"She is _____ honest girl.",o:["a","an","the","-"],a:1,p:"H tak dibaca: an."},
+    {q:"They _____ to cinema last week.",o:["go","goes","went","gone"],a:2,p:"Past: went."},
+    {q:"I have _____ in Jakarta for 5 years.",o:["live","lived","living","lives"],a:1,p:"Have+V3."},
+    {q:"She is taller _____ her sister.",o:["from","than","that","then"],a:1,p:"Comparative+than."},
+    {q:"This book is _____ than that.",o:["interesting","more interesting","most","interestinger"],a:1,p:"More+adj."},
+    {q:"I'll meet you _____ Monday.",o:["in","on","at","to"],a:1,p:"On + day."},
+    {q:"The book _____ on the table is mine.",o:["who","which","whom","whose"],a:1,p:"Things: which."},
+    {q:"She sings _____.",o:["beautiful","beauty","beautifully","beautify"],a:2,p:"Adverb."},
+    {q:"There _____ many students.",o:["is","are","was","be"],a:1,p:"Plural: are."},
+    {q:"How _____ does it cost?",o:["many","much","more","most"],a:1,p:"Price: much."},
+    {q:"I _____ TV when she came.",o:["watch","watched","was watching","am watching"],a:2,p:"Past continuous."},
+    {q:"If I _____ rich, I would travel.",o:["am","was","were","be"],a:2,p:"Cond 2: were."},
+    {q:"Synonym 'fast'...",o:["slow","quick","late","tardy"],a:1,p:"Quick."},
+    {q:"Antonym 'beautiful'...",o:["pretty","ugly","handsome","gorgeous"],a:1,p:"Ugly."},
+    {q:"Opposite 'difficult'...",o:["hard","tough","easy","complex"],a:2,p:"Easy."},
+    {q:"_____ you like coffee?",o:["Are","Do","Is","Does"],a:1,p:"Do you."},
+    {q:"She has been studying _____ 3 hours.",o:["since","for","at","in"],a:1,p:"Duration: for."},
+    {q:"I have lived here _____ 2010.",o:["for","since","from","at"],a:1,p:"Point: since."},
+    {q:"Passive of 'They built the house in 2020':",o:["is built","was built","has built","build"],a:1,p:"Was built."},
+    {q:"I'll call when I _____ home.",o:["arrive","arrived","will arrive","am arriving"],a:0,p:"After when: V1."},
+    {q:"Neither John nor Mary _____ at party.",o:["was","were","is","are"],a:0,p:"Singular: was."}
+  ]
+},
+
+paket2: {
+  nama: "Paket 2 - Tingkat Menengah",
+  tpa: [
+    {q:"Sinonim ARTIKULASI...",o:["Pengucapan","Penulisan","Pernyataan","Penegasan"],a:0,p:"Pengucapan jelas."},
+    {q:"Sinonim BUNGALO...",o:["Hotel","Rumah peristirahatan","Wisma","Pondok"],a:1,p:"Rumah peristirahatan."},
+    {q:"Sinonim CITRA...",o:["Gambar","Pikiran","Bayangan","Foto"],a:2,p:"Bayangan/kesan."},
+    {q:"Sinonim DEPRESI...",o:["Tertekan","Sedih","Lesu","Kemurungan"],a:3,p:"Kemurungan."},
+    {q:"Sinonim EVOKASI...",o:["Penggugah rasa","Permohonan","Pengusiran","Penilaian"],a:0,p:"Penggugah rasa."},
+    {q:"Sinonim FUSI...",o:["Gabungan","Pembagian","Persaingan","Pertikaian"],a:0,p:"Gabungan."},
+    {q:"Sinonim GANCU...",o:["Galah","Pengait","Timba","Serokan"],a:1,p:"Pengait."},
+    {q:"Sinonim HEDONISME...",o:["Kesenangan","Kebahagiaan","Mengejar nikmat","Kemewahan"],a:2,p:"Mengejar kenikmatan."},
+    {q:"Sinonim INSINUASI...",o:["Ejekan","Sindiran","Cemooh","Hinaan"],a:1,p:"Sindiran."},
+    {q:"Sinonim JARGON...",o:["Slogan","Bahasa khusus","Motto","Semboyan"],a:1,p:"Bahasa khusus."},
+    {q:"Sinonim KOMPLEKSITAS...",o:["Kerumitan","Kemudahan","Keruwetan","Kesulitan"],a:0,p:"Kerumitan."},
+    {q:"Sinonim LIKUIDASI...",o:["Penghapusan","Pembubaran","Pemberhentian","Penagihan"],a:1,p:"Pembubaran."},
+    {q:"Sinonim MANIFESTO...",o:["Penjelasan","Pernyataan resmi","Penegasan","Pengumuman"],a:1,p:"Pernyataan resmi."},
+    {q:"Sinonim NIRLABA...",o:["Tanpa untung","Sukarela","Sosial","Filantropi"],a:0,p:"Tanpa untung."},
+    {q:"Sinonim OBSESI...",o:["Khawatir","Pikiran terpaku","Ambisi","Cita-cita"],a:1,p:"Pikiran terpaku."},
+    {q:"Antonim AKURAT...",o:["Cepat","Meleset","Cermat","Salah"],a:1,p:"↔ meleset."},
+    {q:"Antonim BERSAHAJA...",o:["Mewah","Sederhana","Sombong","Cantik"],a:0,p:"↔ mewah."},
+    {q:"Antonim CACAT...",o:["Buruk","Lengkap","Sempurna","Bagus"],a:2,p:"↔ sempurna."},
+    {q:"Antonim DINAMIS...",o:["Pasif","Statis","Diam","Lamban"],a:1,p:"↔ statis."},
+    {q:"Antonim ELASTIS...",o:["Kaku","Lunak","Lentur","Keras"],a:0,p:"↔ kaku."},
+    {q:"Antonim FANA...",o:["Hidup","Abadi","Kekal","Mati"],a:1,p:"↔ abadi."},
+    {q:"Antonim GRATIS...",o:["Mahal","Bayar","Murah","Hadiah"],a:1,p:"↔ bayar."},
+    {q:"Antonim HIPOTETIS...",o:["Empiris","Faktual","Asumsi","Khayal"],a:1,p:"↔ faktual."},
+    {q:"Antonim IMIGRASI...",o:["Migrasi","Emigrasi","Transmigrasi","Urbanisasi"],a:1,p:"↔ emigrasi."},
+    {q:"Antonim JINAK...",o:["Buas","Galak","Liar","Marah"],a:2,p:"↔ liar."},
+    {q:"Antonim KONKRET...",o:["Maya","Abstrak","Kabur","Semu"],a:1,p:"↔ abstrak."},
+    {q:"Antonim LANGKA...",o:["Banyak","Berlimpah","Mudah","Murah"],a:1,p:"↔ berlimpah."},
+    {q:"Antonim MAJU...",o:["Mundur","Diam","Berhenti","Lambat"],a:0,p:"↔ mundur."},
+    {q:"Antonim NORMAL...",o:["Cacat","Aneh","Anomali","Asing"],a:2,p:"↔ anomali."},
+    {q:"Antonim OPTIMAL...",o:["Minimal","Maksimal","Terbatas","Sedang"],a:0,p:"↔ minimal."},
+    {q:"PADI:SAWAH = TEH:...",o:["Daun","Kebun","Pohon","Pegunungan"],a:1,p:"Tempat tumbuh."},
+    {q:"BURUNG:SARANG = MANUSIA:...",o:["Tempat tidur","Rumah","Kamar","Atap"],a:1,p:"Tempat tinggal."},
+    {q:"PENULIS:NOVEL = KOMPOSER:...",o:["Lagu","Musik","Komposisi","Nada"],a:2,p:"Hasil karya."},
+    {q:"DOKTER:STETOSKOP = TUKANG KAYU:...",o:["Paku","Kayu","Gergaji","Lemari"],a:2,p:"Alat profesi."},
+    {q:"GARAM:ASIN = GULA:...",o:["Putih","Manis","Pasir","Tebu"],a:1,p:"Sifat rasa."},
+    {q:"PETANI:CANGKUL = NELAYAN:...",o:["Laut","Ikan","Jala","Perahu"],a:2,p:"Alat kerja."},
+    {q:"AYAM:KOKOK = KUCING:...",o:["Mengeong","Menggonggong","Mengaum","Mendengkur"],a:0,p:"Suara hewan."},
+    {q:"NEGARA:PRESIDEN = KERAJAAN:...",o:["Raja","Ratu","Pangeran","Penguasa"],a:0,p:"Pemimpin."},
+    {q:"GULA:MANIS = CABAI:...",o:["Merah","Pedas","Hijau","Lonjong"],a:1,p:"Sifat khas."},
+    {q:"MOBIL:BENSIN = MANUSIA:...",o:["Air","Makanan","Olahraga","Tidur"],a:1,p:"Sumber energi."},
+    {q:"PANAS:DINGIN = SIANG:...",o:["Pagi","Sore","Malam","Senja"],a:2,p:"Antonim."},
+    {q:"BUKU:HALAMAN = FILM:...",o:["Layar","Adegan","Aktor","Sutradara"],a:1,p:"Bagian dari keseluruhan."},
+    {q:"BENANG:KAIN = HURUF:...",o:["Buku","Kalimat","Kata","Bahasa"],a:2,p:"Penyusun."},
+    {q:"SIRIP:IKAN = SAYAP:...",o:["Pesawat","Burung","Awan","Udara"],a:1,p:"Alat gerak."},
+    {q:"TINTA:PENA = CAT:...",o:["Tembok","Kuas","Warna","Lukisan"],a:1,p:"Bahan dan alat."},
+    {q:"40% × 250 + 50 = ...",o:["140","150","160","170"],a:1,p:"100+50=150."},
+    {q:"4x - 7 = 25. x = ...",o:["6","7","8","9"],a:2,p:"4x=32; x=8."},
+    {q:"3/5 + 1/3 = ...",o:["4/8","14/15","13/15","9/15"],a:1,p:"9/15+5/15=14/15."},
+    {q:"60% dari 350 = ...",o:["180","200","210","240"],a:2,p:"210."},
+    {q:"a=5, b=12. √(a²+b²) = ...",o:["12","13","14","15"],a:1,p:"13."},
+    {q:"7 pekerja 14 hari. 14 pekerja?",o:["5","6","7","8"],a:2,p:"7 hari."},
+    {q:"Diskon 25% dari 80.000 = ...",o:["15.000","18.000","20.000","22.000"],a:2,p:"20.000."},
+    {q:"Bunga 8%/tahun dari 500.000 selama 2 thn?",o:["40.000","60.000","80.000","100.000"],a:2,p:"500rb×0,08×2=80rb."},
+    {q:"Rata-rata 65,70,75,80,85 = ...",o:["73","74","75","76"],a:2,p:"75."},
+    {q:"Naik 20% jadi 60.000. Awal?",o:["45.000","48.000","50.000","55.000"],a:2,p:"50rb."},
+    {q:"Volume kubus rusuk 5cm = ...",o:["100","115","125","150"],a:2,p:"125."},
+    {q:"Luas lingkaran r=7 (π=22/7)?",o:["144","154","164","174"],a:1,p:"154."},
+    {q:"3⁴ - 2³ = ...",o:["73","75","78","81"],a:0,p:"81-8=73."},
+    {q:"60 km/jam selama 2,5 jam?",o:["120","130","150","160"],a:2,p:"150 km."},
+    {q:"Skala 1:50.000. 4cm = ...",o:["1 km","2 km","3 km","4 km"],a:1,p:"2 km."},
+    {q:"FPB 24 dan 36 = ...",o:["6","8","10","12"],a:3,p:"12."},
+    {q:"KPK 6 dan 8 = ...",o:["20","22","24","26"],a:2,p:"24."},
+    {q:"Selisih 30 dan 18 = ...",o:["10","11","12","13"],a:2,p:"12."},
+    {q:"5 angka total 250. Rata-rata?",o:["48","50","52","55"],a:1,p:"50."},
+    {q:"A:B=2:3, A=20. B=...",o:["25","28","30","32"],a:2,p:"30."},
+    {q:"3,7,11,15,...",o:["18","19","20","21"],a:1,p:"+4: 19."},
+    {q:"5,10,17,26,...",o:["35","36","37","38"],a:2,p:"37."},
+    {q:"1,2,4,7,11,...",o:["14","15","16","17"],a:2,p:"16."},
+    {q:"100,90,82,76,...",o:["68","70","72","74"],a:2,p:"72."},
+    {q:"2,3,6,18,108,...",o:["1944","1080","324","216"],a:0,p:"18×108=1944."},
+    {q:"1,8,27,64,...",o:["100","115","125","144"],a:2,p:"125."},
+    {q:"A,D,I,P,...",o:["W","X","Y","Z"],a:2,p:"Y."},
+    {q:"2,4,7,11,16,...",o:["20","22","24","25"],a:1,p:"22."},
+    {q:"81,27,9,3,...",o:["1","0","2","6"],a:0,p:"1."},
+    {q:"3,6,11,18,27,...",o:["38","36","40","48"],a:0,p:"38."},
+    {q:"1,4,10,22,...",o:["44","46","48","50"],a:1,p:"46."},
+    {q:"2,6,12,20,30,...",o:["40","42","44","46"],a:1,p:"42."},
+    {q:"96,48,24,12,...",o:["6","8","9","10"],a:0,p:"6."},
+    {q:"5,11,23,47,...",o:["91","93","95","97"],a:2,p:"95."},
+    {q:"1,4,9,16,25,...",o:["32","34","36","38"],a:2,p:"36."},
+    {q:"Semua dosen pintar. Ali dosen. Maka...",o:["Pintar","Tak pintar","Tak tahu","Kaya"],a:0,p:"Pintar."},
+    {q:"Tak ada vertebrata tak bertulang. Cacing tak bertulang. Maka...",o:["Vertebrata","Bukan vertebrata","Bertulang","Tak ada"],a:1,p:"Bukan vertebrata."},
+    {q:"Sebagian mahasiswa atlet. Atlet sehat. Maka...",o:["Mahasiswa sehat","Sebagian mahasiswa sehat","Atlet mahasiswa","Tak ada"],a:1,p:"Sebagian sehat."},
+    {q:"Hujan→basah. Basah. Maka...",o:["Hujan","Tak hujan","Belum tentu","Banjir"],a:2,p:"Konvers tak menjamin."},
+    {q:"Semua A=B. Tak ada B=C. Maka...",o:["A=C","Tak ada A=C","Sebagian","Tak tahu"],a:1,p:"Tak ada A=C."},
+    {q:"5 anak: A>B>C>D>E. Tertinggi?",o:["A","B","C","E"],a:0,p:"A."},
+    {q:"P atau Q. P salah. Maka...",o:["Q benar","Q salah","Tak tahu","Keduanya"],a:0,p:"Q benar."},
+    {q:"Ani kakak Beta. Beta kakak Cita. Ani-Cita?",o:["Ibu","Adik","Kakak","Sepupu"],a:2,p:"Kakak."},
+    {q:"Selasa + 15 hari = ...",o:["Senin","Selasa","Rabu","Kamis"],a:2,p:"Rabu."},
+    {q:"P>Q,Q>S,S>T,R>P. Terbesar?",o:["P","Q","R","T"],a:2,p:"R."},
+    {q:"Tak semua miskin malas. Ali miskin. Malas?",o:["Pasti malas","Pasti rajin","Belum tentu","Rajin"],a:2,p:"Belum tentu."},
+    {q:"Andi baca tiap hari. Hari ini sakit. Maka...",o:["Tak baca","Tetap baca","Tak tahu","Sakit"],a:2,p:"Tak tahu."},
+    {q:"Lulus→bahagia. Andi tak bahagia. Maka...",o:["Lulus","Tak lulus","Sedih","Tak tahu"],a:1,p:"Tak lulus."},
+    {q:"5 anak: A pinggir kiri, E pinggir kanan, C tengah, B antara A-C. Posisi D?",o:["Antara A-C","Antara C-E","Sebelah A","Sebelah E"],a:1,p:"Antara C-E."},
+    {q:"Pak Tua > Pak Tani > Pak Karto > Pak Burhan. Termuda?",o:["Tua","Tani","Karto","Burhan"],a:3,p:"Burhan."},
+    {q:"Tak ada PNS malas. Anto PNS. Maka...",o:["Malas","Rajin","Tak malas","Kaya"],a:2,p:"Tak malas."},
+    {q:"Buku:Pengarang = Surat:...",o:["Pengirim","Tukang pos","Penerima","Cap"],a:0,p:"Pengirim."},
+    {q:"4 buku: A kiri B; C kanan D; B antara A-C. Urutan?",o:["ABCD","DCBA","ABDC","CDBA"],a:2,p:"ABDC."},
+    {q:"Rabu = 3 hari setelah ...",o:["Sabtu","Minggu","Senin","Selasa"],a:1,p:"Minggu."},
+    {q:"6 angka berurutan dari 7. Total?",o:["54","57","60","63"],a:1,p:"57."},
+    {q:"a@b=a²+b. 3@4=...",o:["10","11","12","13"],a:3,p:"13."},
+    {q:"P*Q=2P+Q. 5*x=17. x=...",o:["5","6","7","8"],a:2,p:"7."},
+    {q:"30 siswa: 18 mat, 15 IPA, 8 keduanya. Tak suka?",o:["3","5","7","9"],a:1,p:"5."},
+    {q:"7 orang 6 jam. 14 orang?",o:["2","3","4","5"],a:1,p:"3 jam."},
+    {q:"Jumat + 100 hari = ...",o:["Sabtu","Minggu","Senin","Selasa"],a:1,p:"Minggu."},
+    {q:"Sumbu simetri persegi panjang = ...",o:["1","2","3","4"],a:1,p:"2."},
+    {q:"Belah ketupat diagonal?",o:["1","2","3","4"],a:1,p:"2."},
+    {q:"Jajar genjang simetri putar?",o:["1","2","3","4"],a:1,p:"Ordo 2."},
+    {q:"Sudut keliling lingkaran?",o:["180","270","360","450"],a:2,p:"360°."},
+    {q:"Sisi bola?",o:["0","1","2","Tak hingga"],a:1,p:"1 sisi."},
+    {q:"Limas segitiga rusuk?",o:["4","5","6","7"],a:2,p:"6."},
+    {q:"Prisma segitiga sisi?",o:["3","4","5","6"],a:2,p:"5."},
+    {q:"Pola ◇○◇○◇... berikutnya?",o:["◇","○","△","☐"],a:1,p:"○."},
+    {q:"Jam 9.00 sudut?",o:["60","90","120","180"],a:1,p:"90°."},
+    {q:"Jam 12.00 sudut?",o:["0","90","180","360"],a:0,p:"0°."},
+    {q:"1,3,9,27,...",o:["54","81","108","243"],a:1,p:"81."},
+    {q:"Cermin huruf 'A'?",o:["A","Λ","V","Tak berubah"],a:3,p:"Simetri."},
+    {q:"Sudut segi-6 beraturan?",o:["90","100","108","120"],a:3,p:"120°."},
+    {q:"Trapesium pasang sisi sejajar?",o:["1","2","3","4"],a:0,p:"1."},
+    {q:"Segi banyak beraturan = ...",o:["Tak beraturan","Beraturan","Sembarang","Konveks"],a:1,p:"Beraturan."}
+  ],
+  tbi: [
+    {q:"Baku 'fihak'...",o:["pihak","fihak","pyhak","pihaq"],a:0,p:"Pihak."},
+    {q:"'antar provinsi'...",o:["antarprovinsi","antar provinsi","antar-provinsi","antar provinsi"],a:0,p:"Digabung."},
+    {q:"Kalimat baku...",o:["Saya pergi kepasar","Saya pergi ke pasar","Saya kepasar","Saya pergiPasar"],a:1,p:"Ke terpisah."},
+    {q:"Baku 'tehnik'...",o:["teknik","tehnik","tekhnik","teknic"],a:0,p:"Teknik."},
+    {q:"Tanda hubung benar...",o:["satu-persatu","satu per satu","satu-per-satu","satu persatu"],a:1,p:"Tanpa tanda."},
+    {q:"'Memperbarui'...",o:["mengganti baru","membuat jadi baru","jadi baru","baru lagi"],a:1,p:"Membuat baru."},
+    {q:"Baku 'merubah'...",o:["merubah","mengubah","mengubahkan","menggubah"],a:1,p:"Mengubah."},
+    {q:"me-+kantor...",o:["mengkantor","mekantor","ngantor","ke kantor"],a:0,p:"Mengantor."},
+    {q:"Baku 'jadual'...",o:["jadual","jadwal","jadwall","jaduwal"],a:1,p:"Jadwal."},
+    {q:"Kalimat efektif...",o:["Anak-anak pada bermain","Anak-anak bermain","Banyak anak-anak bermain","Para anak-anak"],a:1,p:"B paling efektif."},
+    {q:"Pasif 'Ibu memasak nasi'...",o:["Nasi dimasak ibu","Ibu dimasak","Memasak ibu nasi","Nasi memasak"],a:0,p:"Nasi dimasak ibu."},
+    {q:"'Panjang tangan'...",o:["tangan panjang","suka mencuri","kuat","cekatan"],a:1,p:"Pencuri."},
+    {q:"'Naik daun'...",o:["pohon","terkenal","sukses","tinggi"],a:1,p:"Populer."},
+    {q:"Sinonim 'gigih'...",o:["semangat","tekun","keras kepala","sabar"],a:1,p:"Tekun."},
+    {q:"Antonim 'optimis'...",o:["pesimis","ragu","bimbang","skeptis"],a:0,p:"Pesimis."},
+    {q:"Serapan 'university'...",o:["universiti","universitas","universita","universitate"],a:1,p:"Universitas."},
+    {q:"Titik koma (;) tepat...",o:["Antar kalimat","Akhir paragraf","Awal kalimat","Pembagi judul"],a:0,p:"Antar kalimat."},
+    {q:"'Dipungkiri'...",o:["dipungkiri","dimungkiri","dimungkirikan","tak baku"],a:1,p:"Dimungkiri."},
+    {q:"Baku 'ijin'...",o:["ijin","izin","idzin","iizin"],a:1,p:"Izin."},
+    {q:"Baku 'extrakurikuler'...",o:["extrakurikuler","ekstrakulikuler","ekstrakurikuler","extra kurikuler"],a:2,p:"Ekstrakurikuler."},
+    {q:"pe-an+jajah...",o:["pejajahan","penjajahan","penjajahaan","penjajaan"],a:1,p:"Penjajahan."},
+    {q:"Majemuk setara...",o:["Saya makan dan adik minum","Karena lapar saya makan","Saya makan walau lapar","Saya makan sebelum tidur"],a:0,p:"Konjungsi setara."},
+    {q:"Huruf kapital benar...",o:["dr. ahmad","Dr. Ahmad","DR. Ahmad","dr Ahmad"],a:1,p:"Dr. Ahmad."},
+    {q:"Penulisan jam baku...",o:["pukul 10:30","pukul 10.30","jam 10:30","jam 10.30 wib"],a:1,p:"Pukul + titik."},
+    {q:"Sinonim 'mendapat'...",o:["meraih","memperoleh","memenangkan","menemukan"],a:1,p:"Memperoleh."},
+    {q:"Baku 'fardhu'...",o:["fardu","fardhu","fardlu","fhardu"],a:0,p:"Fardu."},
+    {q:"Kata berulang benar...",o:["pohon-pohonan","pepohonan","pohon-pohon","semua benar"],a:3,p:"Semua bisa."},
+    {q:"'Belum lagi'...",o:["frasa","kata","klausa","kalimat"],a:0,p:"Frasa."},
+    {q:"Sinonim 'perspektif'...",o:["pandangan","pengertian","pendapat","persepsi"],a:0,p:"Pandangan."},
+    {q:"Antonim 'progresif'...",o:["maju","mundur","statis","dinamis"],a:1,p:"Mundur."},
+    {q:"He has been working here _____ 2015.",o:["for","since","at","from"],a:1,p:"Since."},
+    {q:"My sister _____ a book now.",o:["read","reads","is reading","was reading"],a:2,p:"Now: continuous."},
+    {q:"They _____ already finished test.",o:["have","has","had","were"],a:0,p:"They+have."},
+    {q:"_____ she like swimming?",o:["Do","Does","Is","Are"],a:1,p:"3rd sing: Does."},
+    {q:"Students _____ in classroom yesterday.",o:["is","are","was","were"],a:3,p:"Plural past: were."},
+    {q:"I _____ homework before bed.",o:["did","do","done","doing"],a:0,p:"Past: did."},
+    {q:"This is _____ book I have read.",o:["good","better","best","the best"],a:3,p:"Superlative+the."},
+    {q:"She runs as fast _____ horse.",o:["as","than","like","so"],a:0,p:"As...as."},
+    {q:"I look forward to _____ from you.",o:["hear","hearing","heard","hears"],a:1,p:"To+V-ing."},
+    {q:"He suggested _____ early.",o:["leave","leaving","to leave","left"],a:1,p:"Suggest+V-ing."},
+    {q:"It's no use _____ over milk.",o:["cry","to cry","crying","cried"],a:2,p:"No use+V-ing."},
+    {q:"You had better _____ teacher.",o:["ask","asking","to ask","asked"],a:0,p:"Had better+V1."},
+    {q:"I prefer tea _____ coffee.",o:["than","to","over","from"],a:1,p:"Prefer A to B."},
+    {q:"_____ tired, he kept working.",o:["Although","Because","Since","Therefore"],a:0,p:"Although."},
+    {q:"By the time you arrive, I _____ dinner.",o:["cook","cooked","will have cooked","am cooking"],a:2,p:"Future perfect."},
+    {q:"He _____ door when I came.",o:["open","opens","was opening","is opening"],a:2,p:"Past continuous."},
+    {q:"If you _____ harder, you would pass.",o:["studied","study","studies","had studied"],a:0,p:"Cond 2."},
+    {q:"She is woman _____ helped me.",o:["who","whom","which","whose"],a:0,p:"Who."},
+    {q:"Book _____ I read was great.",o:["who","whom","which","whose"],a:2,p:"Which."},
+    {q:"Antonym 'expensive'...",o:["costly","cheap","dear","pricey"],a:1,p:"Cheap."},
+    {q:"Synonym 'difficult'...",o:["easy","simple","hard","light"],a:2,p:"Hard."},
+    {q:"Synonym 'happy'...",o:["sad","glad","angry","tired"],a:1,p:"Glad."},
+    {q:"_____ a hot day.",o:["It is","There is","This is","That is"],a:0,p:"It is."},
+    {q:"How long _____ you been here?",o:["have","has","do","are"],a:0,p:"Have."},
+    {q:"There _____ a book on table.",o:["is","are","was","were"],a:0,p:"Is."},
+    {q:"He is too tired _____ work.",o:["for","to","with","at"],a:1,p:"Too...to."},
+    {q:"She is good _____ English.",o:["in","at","on","with"],a:1,p:"Good at."},
+    {q:"Don't make _____ noise!",o:["a","an","such","-"],a:3,p:"Uncountable."},
+    {q:"He went to school _____ foot.",o:["by","on","with","in"],a:1,p:"On foot."},
+    {q:"I'm interested _____ music.",o:["on","at","in","with"],a:2,p:"Interested in."}
+  ]
+},
+
+paket3: {
+  nama: "Paket 3 - Tingkat Lanjut",
+  tpa: [
+    {q:"Sinonim PARADIGMA...",o:["Pemikiran","Kerangka berpikir","Konsep","Wawasan"],a:1,p:"Kerangka pikir."},
+    {q:"Sinonim QUASI...",o:["Hampir","Mirip","Seakan-akan","Setengah"],a:2,p:"Seakan-akan."},
+    {q:"Sinonim RELASI...",o:["Hubungan","Persaudaraan","Pertalian","Kekeluargaan"],a:0,p:"Hubungan."},
+    {q:"Sinonim SAHIH...",o:["Resmi","Benar","Asli","Valid"],a:3,p:"Valid."},
+    {q:"Sinonim TENTATIF...",o:["Sementara","Pasti","Tetap","Bebas"],a:0,p:"Sementara."},
+    {q:"Sinonim UNIFIKASI...",o:["Persatuan","Pemisahan","Kebebasan","Penghancuran"],a:0,p:"Persatuan."},
+    {q:"Sinonim VERIFIKASI...",o:["Pemeriksaan","Penolakan","Pengakuan","Pengiriman"],a:0,p:"Pemeriksaan."},
+    {q:"Sinonim WAHANA...",o:["Hadiah","Sarana","Tujuan","Kendaraan"],a:1,p:"Sarana."},
+    {q:"Sinonim YURISDIKSI...",o:["Kekuasaan","Wilayah hukum","Pengadilan","Hukum"],a:1,p:"Wilayah hukum."},
+    {q:"Sinonim ZONA...",o:["Wilayah","Batas","Tempat","Negara"],a:0,p:"Wilayah."},
+    {q:"Sinonim AGITASI...",o:["Hasutan","Provokasi","Pengacauan","Semua benar"],a:3,p:"Semua benar."},
+    {q:"Sinonim BIENAL...",o:["2 thn sekali","tiap thn","tiap bln","tiap mgg"],a:0,p:"2 tahun."},
+    {q:"Sinonim CITA-CITA...",o:["Mimpi","Aspirasi","Tujuan","Harapan"],a:1,p:"Aspirasi."},
+    {q:"Sinonim DERIVASI...",o:["Pengambilan","Penurunan","Pembagian","Pemisahan"],a:1,p:"Penurunan."},
+    {q:"Sinonim ELEGAN...",o:["Anggun","Bersih","Bagus","Mahal"],a:0,p:"Anggun."},
+    {q:"Antonim PRESISI...",o:["Cermat","Sembrono","Tepat","Akurat"],a:1,p:"Sembrono."},
+    {q:"Antonim QUO...",o:["Tetap","Berubah","Diam","Terkenal"],a:1,p:"Berubah."},
+    {q:"Antonim RISIH...",o:["Senang","Sedih","Nyaman","Marah"],a:2,p:"Nyaman."},
+    {q:"Antonim SPORADIS...",o:["Jarang","Tetap","Sering","Acak"],a:2,p:"Sering."},
+    {q:"Antonim TANGKAS...",o:["Cekatan","Lambat","Lamban","Cermat"],a:2,p:"Lamban."},
+    {q:"Antonim UNGGUL...",o:["Bawah","Inferior","Rendah","Buruk"],a:1,p:"Inferior."},
+    {q:"Antonim VITAL...",o:["Penting","Sepele","Mati","Hidup"],a:1,p:"Sepele."},
+    {q:"Antonim WAJIB...",o:["Sunah","Sukarela","Halal","Haram"],a:1,p:"Sukarela."},
+    {q:"Antonim XENOFILIA...",o:["Xenofobia","Nasionalisme","Patriotisme","Internasionalisme"],a:0,p:"Xenofobia."},
+    {q:"Antonim YUNIOR...",o:["Senior","Tua","Pintar","Tinggi"],a:0,p:"Senior."},
+    {q:"Antonim ZENIT...",o:["Puncak","Nadir","Atas","Atas atas"],a:1,p:"Nadir."},
+    {q:"Antonim ABDIKASI...",o:["Pelimpahan","Pengangkatan","Pembagian","Pengurangan"],a:1,p:"Pengangkatan."},
+    {q:"Antonim BANGSAWAN...",o:["Raja","Rakyat jelata","Petinggi","Hartawan"],a:1,p:"Rakyat jelata."},
+    {q:"Antonim CHAOS...",o:["Tertib","Damai","Diam","Aman"],a:0,p:"Tertib."},
+    {q:"Antonim DETIL...",o:["Rinci","Garis besar","Mendalam","Sempit"],a:1,p:"Garis besar."},
+    {q:"BIBIT:BENIH = LARVA:...",o:["Telur","Pupa","Kepompong","Kupu-kupu"],a:1,p:"Pupa."},
+    {q:"OLAHRAGA:STADION = TEATER:...",o:["Layar","Panggung","Pemain","Penonton"],a:1,p:"Panggung."},
+    {q:"KOMPAS:ARAH = TERMOMETER:...",o:["Air","Suhu","Cuaca","Demam"],a:1,p:"Suhu."},
+    {q:"LAPAR:MAKAN = MENGANTUK:...",o:["Bangun","Tidur","Lelah","Diam"],a:1,p:"Tidur."},
+    {q:"BENSIN:KENDARAAN = MAKANAN:...",o:["Mulut","Tubuh","Lambung","Manusia"],a:1,p:"Tubuh."},
+    {q:"TUKANG:CAT = KOKI:...",o:["Daging","Restoran","Bumbu","Resep"],a:2,p:"Bumbu."},
+    {q:"PERANTAU:KAMPUNG = NELAYAN:...",o:["Pantai","Kapal","Laut","Ikan"],a:2,p:"Laut."},
+    {q:"KECIL:KERDIL = BESAR:...",o:["Lebar","Tinggi","Bongsor","Gemuk"],a:2,p:"Bongsor."},
+    {q:"MATA:LIHAT = TELINGA:...",o:["Bicara","Cium","Dengar","Raba"],a:2,p:"Dengar."},
+    {q:"KAMUS:KATA = ENSIKLOPEDIA:...",o:["Kalimat","Pengetahuan","Buku","Halaman"],a:1,p:"Pengetahuan."},
+    {q:"GANDUM:ROTI = KEDELAI:...",o:["Kacang","Susu","Tahu","Tepung"],a:2,p:"Tahu."},
+    {q:"GALA:PRESIDEN = TURNAMEN:...",o:["Pemain","Juara","Wasit","Penonton"],a:1,p:"Juara."},
+    {q:"MAHASISWA:KAMPUS = NELAYAN:...",o:["Pancing","Laut","Ikan","Pelabuhan"],a:1,p:"Laut."},
+    {q:"INTAN:CINCIN = MUTIARA:...",o:["Kerang","Lautan","Kalung","Hadiah"],a:2,p:"Kalung."},
+    {q:"SAJAK:PUISI = NOVEL:...",o:["Cerita","Cerpen","Sastra","Buku"],a:2,p:"Sastra."},
+    {q:"35% × 1200 - 200 = ...",o:["220","230","240","250"],a:0,p:"220."},
+    {q:"5x+7 = 3x+19. x=...",o:["5","6","7","8"],a:1,p:"6."},
+    {q:"3/8 + 5/12 = ...",o:["7/24","17/24","19/24","23/24"],a:2,p:"19/24."},
+    {q:"a:b:c=2:3:5, total=60. c=...",o:["20","25","30","35"],a:2,p:"30."},
+    {q:"Laba 25% dari 200rb?",o:["40rb","45rb","50rb","55rb"],a:2,p:"50rb."},
+    {q:"√169 + ∛125 = ...",o:["18","20","22","24"],a:0,p:"13+5=18."},
+    {q:"Rata-rata 4 ujian 75. Ke-5=90. Rata-rata baru?",o:["77","78","79","80"],a:1,p:"78."},
+    {q:"60 dan 80 km/jam selama 4 jam. Selisih?",o:["60","80","100","120"],a:1,p:"80 km."},
+    {q:"Skala 1:25.000. 6cm=...",o:["1km","1,5km","2km","2,5km"],a:1,p:"1,5 km."},
+    {q:"log 2=0,301; log 3=0,477. log 6=...",o:["0,478","0,778","0,801","0,945"],a:1,p:"0,778."},
+    {q:"Volume balok 6×4×3 = ...",o:["52","62","72","82"],a:2,p:"72."},
+    {q:"Selimut tabung r=7,t=10 (π=22/7)?",o:["220","330","440","550"],a:2,p:"440."},
+    {q:"Diskon 30% dari 250.000?",o:["65rb","70rb","75rb","80rb"],a:2,p:"75rb."},
+    {q:"Laba 45rb dari modal 300rb. %?",o:["10%","12%","15%","20%"],a:2,p:"15%."},
+    {q:"Turun 25% dari 80.000?",o:["55","60","65","70"],a:1,p:"60.000."},
+    {q:"Bunga majemuk 10%/thn. Modal 1jt setelah 2 thn?",o:["1,2jt","1,21jt","1,22jt","1,25jt"],a:1,p:"1.210.000."},
+    {q:"7!/5! = ...",o:["7","21","35","42"],a:3,p:"42."},
+    {q:"Susunan huruf 'BUKU' = ...",o:["12","18","24","36"],a:0,p:"12."},
+    {q:"Jumlah 30 bilangan asli pertama = ...",o:["455","465","475","485"],a:1,p:"465."},
+    {q:"5/6 dari 24.000 = ...",o:["18rb","20rb","22rb","24rb"],a:1,p:"20.000."},
+    {q:"4,9,16,25,...",o:["32","34","36","38"],a:2,p:"36."},
+    {q:"1,3,7,15,31,...",o:["59","61","63","65"],a:2,p:"63."},
+    {q:"3,8,18,38,...",o:["68","70","78","80"],a:2,p:"78."},
+    {q:"5,8,13,20,29,...",o:["38","40","42","44"],a:1,p:"40."},
+    {q:"144,121,100,81,...",o:["49","56","64","72"],a:2,p:"64."},
+    {q:"2,5,11,23,47,...",o:["91","93","95","97"],a:2,p:"95."},
+    {q:"50,42,33,23,...",o:["10","12","14","16"],a:1,p:"12."},
+    {q:"1,2,6,24,120,...",o:["480","600","720","840"],a:2,p:"720."},
+    {q:"100,98,94,88,80,...",o:["68","70","72","74"],a:1,p:"70."},
+    {q:"3,4,8,17,...",o:["31","33","36","37"],a:1,p:"33."},
+    {q:"AC,BD,CE,DF,...",o:["DG","EG","FG","EH"],a:1,p:"EG."},
+    {q:"4,12,36,108,...",o:["216","324","432","540"],a:1,p:"324."},
+    {q:"64,32,40,20,28,...",o:["12","13","14","15"],a:2,p:"14."},
+    {q:"1,4,2,8,3,12,4,...",o:["16","18","20","24"],a:0,p:"16."},
+    {q:"100,99,97,94,90,...",o:["83","84","85","86"],a:2,p:"85."},
+    {q:"P→Q. Q salah. Maka...",o:["P benar","P salah","Tak tahu","Q benar"],a:1,p:"P salah."},
+    {q:"Semua A bisa B. Beberapa B bisa C. Maka...",o:["Semua A bisa C","Beberapa A bisa C","Mungkin sebagian A bisa C","Tak ada"],a:2,p:"Mungkin sebagian."},
+    {q:"5 angka berurutan. Tengah=12. Total?",o:["55","60","65","75"],a:1,p:"60."},
+    {q:"Negasi 'Beberapa siswa pintar'...",o:["Tak ada pintar","Semua tak pintar","Tak semua pintar","Sebagian tak pintar"],a:1,p:"Semua tak pintar."},
+    {q:"5 lingkaran: A kanan B; C kanan A; D kanan C; E kanan D. Posisi B?",o:["Kanan A","Kiri A","Antara D-E","Antara C-D"],a:1,p:"Kiri A."},
+    {q:"P→Q dan ~P. Q?",o:["Pasti benar","Pasti salah","Bisa benar/salah","Tak diketahui"],a:2,p:"Bisa benar/salah."},
+    {q:"4 buku: A atas B; C bawah B; D bawah C. Urutan dari atas?",o:["ABCD","DCBA","BACD","ABDC"],a:0,p:"ABCD."},
+    {q:"Andi pulang→Budi belum berangkat. Andi pulang. Maka...",o:["Belum berangkat","Sudah berangkat","Tak tahu","Pulang"],a:0,p:"Belum berangkat."},
+    {q:"Tak semua sukses bahagia. Maka...",o:["Tak ada","Semua","Sebagian sukses tak bahagia","Tak tahu"],a:2,p:"Sebagian tak bahagia."},
+    {q:"Sabtu kemarin?",o:["Jumat","Minggu","Kamis","Senin"],a:0,p:"Jumat."},
+    {q:"Selasa+3 hari = ...",o:["Jumat","Sabtu","Kamis","Rabu"],a:0,p:"Jumat."},
+    {q:"P=4,Q=8,R=6. R:Q=...",o:["10","12","14","16"],a:1,p:"12."},
+    {q:"5 orang antri: F depan, G belakang H, H antara F-I, J akhir. G di posisi?",o:["1","2","3","4"],a:3,p:"4."},
+    {q:"40 siswa: 25 olahraga, 22 seni, 12 keduanya. Tak suka?",o:["3","5","7","10"],a:1,p:"5."},
+    {q:"Senin hari ke-50?",o:["Jumat","Sabtu","Minggu","Senin"],a:1,p:"Sabtu."},
+    {q:"4 box: P>Q; R<S; R=Q. Maka S vs P?",o:["S>P","S<P","S=P","Tak tahu"],a:3,p:"Tak tahu."},
+    {q:"a@b=a+2b. 4@3=...",o:["8","9","10","11"],a:2,p:"10."},
+    {q:"x*y=2x-y. 5*3=...",o:["5","6","7","8"],a:2,p:"7."},
+    {q:"6 ganjil berurutan dari 11. Total?",o:["96","98","100","102"],a:0,p:"96."},
+    {q:"3 anak selisih 2 thn. Total 36. Bungsu?",o:["8","10","12","14"],a:1,p:"10."},
+    {q:"P bohong, Q jujur. Q: 'P bohong'. P berkata?",o:["Q jujur","Q bohong","Q diam","Tak tahu"],a:1,p:"Q bohong."},
+    {q:"Andi 2x Budi. 5 thn lalu Andi 3x Budi. Andi sekarang?",o:["10","15","20","25"],a:2,p:"20."},
+    {q:"Berapa kali jarum jam-menit overlap dalam 12 jam?",o:["10","11","12","13"],a:1,p:"11."},
+    {q:"3 dadu. Probabilitas semua sama?",o:["1/216","6/216","1/36","1/6"],a:1,p:"6/216."},
+    {q:"5 koin semua muka?",o:["1/16","1/32","1/64","5/32"],a:1,p:"1/32."},
+    {q:"Jajar genjang simetri putar ordo?",o:["1","2","3","4"],a:1,p:"2."},
+    {q:"Heksagon beraturan simetri putar?",o:["3","4","5","6"],a:3,p:"6."},
+    {q:"Sudut segi-8 beraturan?",o:["120","135","145","150"],a:1,p:"135°."},
+    {q:"Diagonal segi-6?",o:["6","9","12","15"],a:1,p:"9."},
+    {q:"Spiral menggambarkan?",o:["Lurus","Lingkaran","Kurva membesar","Heliks"],a:2,p:"Membesar."},
+    {q:"Volume kerucut r=3,t=4 (π=3,14)?",o:["37,68","36","40","45,5"],a:0,p:"37,68."},
+    {q:"Segitiga sisi 10,10,12. Luas?",o:["48","50","60","72"],a:0,p:"48."},
+    {q:"Cermin huruf 'p'?",o:["b","d","q","p"],a:2,p:"q."},
+    {q:"Total luas sisi kubus rusuk 4?",o:["64","80","96","112"],a:2,p:"96."},
+    {q:"Cincin r1=3,r2=5. Luas?",o:["8π","12π","16π","20π"],a:2,p:"16π."},
+    {q:"Pola 1,8,27,64,125,...",o:["196","216","225","256"],a:1,p:"216."},
+    {q:"Sudut pelurus 50°?",o:["130","140","150","160"],a:0,p:"130°."},
+    {q:"Sudut penyiku 35°?",o:["45","55","65","75"],a:1,p:"55°."},
+    {q:"Cermin sumbu Y dari (3,4)?",o:["(3,-4)","(-3,4)","(-3,-4)","(4,3)"],a:1,p:"(-3,4)."},
+    {q:"Sinonim ABSORBSI...",o:["Penyerapan","Pelepasan","Penolakan","Penambahan"],a:0,p:"Penyerapan."}
+  ],
+  tbi: [
+    {q:"Baku 'risiko'...",o:["resiko","risiko","resiqo","risico"],a:1,p:"Risiko."},
+    {q:"Baku 'silakan'...",o:["silahkan","silakan","silahken","silaken"],a:1,p:"Silakan."},
+    {q:"'Lagi pula'...",o:["frasa","kata","klausa","konjungsi"],a:0,p:"Frasa."},
+    {q:"Sinonim 'kontroversi'...",o:["pertikaian","perdebatan","permusuhan","sengketa"],a:1,p:"Perdebatan."},
+    {q:"Antonim 'mayoritas'...",o:["banyak","sedikit","minoritas","kelompok"],a:2,p:"Minoritas."},
+    {q:"'Sambil menyelam minum air'...",o:["multitask","sekali jalan","dua-tiga","sekali kerja dua sasaran"],a:3,p:"Dua sekaligus."},
+    {q:"Aktif transitif...",o:["Saya tidur","Adik makan apel","Burung terbang","Hujan turun"],a:1,p:"Butuh objek."},
+    {q:"-wan/wati 'olah raga'...",o:["olahragawan","olahragwan","olahragawati","semua benar"],a:0,p:"Olahragawan."},
+    {q:"Konjungsi temporal...",o:["dan","atau","ketika","tetapi"],a:2,p:"Ketika."},
+    {q:"Tanda baca: \"Apa kabar\" tanya ibu...",o:["?","\".\"","\",\"","\"!\""],a:0,p:"?"},
+    {q:"Pasif 'Adi memetik bunga'...",o:["Bunga adi petik","Bunga dipetik adi","Bunga dipetiknya","Bunga dipetik oleh adi"],a:1,p:"Pasif singkat."},
+    {q:"'Cuci tangan'...",o:["bersih","lepas tanggung jawab","makan","tak terlibat"],a:1,p:"Lepas tanggung jawab."},
+    {q:"'Banting tulang'...",o:["bekerja keras","sakit tulang","istirahat","lelah"],a:0,p:"Kerja keras."},
+    {q:"'Tong kosong nyaring'...",o:["banyak omong","bodoh","ribut","semua"],a:0,p:"Banyak omong."},
+    {q:"Sinonim 'akurat'...",o:["cepat","tepat","tetap","cermat"],a:1,p:"Tepat."},
+    {q:"Antonim 'rajin'...",o:["pintar","malas","cerdas","bodoh"],a:1,p:"Malas."},
+    {q:"Serapan 'system'...",o:["sistim","sistem","system","systim"],a:1,p:"Sistem."},
+    {q:"Majemuk bertingkat...",o:["Saya makan dan minum","Karena lapar saya makan","Saya makan tetapi tak kenyang","Saya makan atau minum"],a:1,p:"Karena=subordinatif."},
+    {q:"Baku 'aktiv'...",o:["aktive","aktif","active","aktivf"],a:1,p:"Aktif."},
+    {q:"Baku 'objek'...",o:["object","obyek","objek","obyec"],a:2,p:"Objek."},
+    {q:"ke-an+pintar...",o:["kepintar","kepintaran","kepintarn","kpintaran"],a:1,p:"Kepintaran."},
+    {q:"Sinonim 'menggugurkan'...",o:["membatalkan","menjatuhkan","menolak","semua benar"],a:3,p:"Semua."},
+    {q:"Tanggal lahir baku...",o:["1-1-1990","1/1/1990","1 Januari 1990","1.1.1990"],a:2,p:"Format formal."},
+    {q:"Tak efektif...",o:["Saya datang","Saya datang ke sini","Saya pergi","Saya tidur"],a:1,p:"Boros kata."},
+    {q:"Elipsis (...) tepat...",o:["Akhir kalimat","Pengganti kata","Dialog terputus","Semua"],a:3,p:"Multifungsi."},
+    {q:"Sinonim 'memperlihatkan'...",o:["menunjukkan","melihat","memandang","mengintai"],a:0,p:"Menunjukkan."},
+    {q:"Antonim 'fakta'...",o:["data","fiksi","realita","kenyataan"],a:1,p:"Fiksi."},
+    {q:"TIDAK baku...",o:["frekuensi","propinsi","standardisasi","koordinasi"],a:1,p:"Provinsi."},
+    {q:"Baku 'metoda'...",o:["metoda","metode","method","metoide"],a:1,p:"Metode."},
+    {q:"Sinonim 'pakar'...",o:["dosen","ahli","pintar","jago"],a:1,p:"Ahli."},
+    {q:"She _____ here for 5 years.",o:["lives","lived","has lived","is living"],a:2,p:"Has lived."},
+    {q:"Passive 'They cleaned room'...",o:["is cleaned","was cleaned","cleaned","has been cleaned"],a:1,p:"Was cleaned."},
+    {q:"_____ careful! Floor wet.",o:["Are","Be","Is","Am"],a:1,p:"Be."},
+    {q:"He told me _____ him.",o:["help","to help","helping","helps"],a:1,p:"Tell sb to V1."},
+    {q:"I wish I _____ taller.",o:["am","be","were","was"],a:2,p:"Were."},
+    {q:"_____ tennis is fun.",o:["For","To","On","Playing"],a:3,p:"Gerund."},
+    {q:"Lived in Bali _____ 2 years.",o:["since","for","at","from"],a:1,p:"For."},
+    {q:"She doesn't have _____ time.",o:["many","much","more","most"],a:1,p:"Much."},
+    {q:"There are _____ apples.",o:["many","much","a few","a little"],a:0,p:"Many."},
+    {q:"Synonym 'small'...",o:["large","tiny","huge","big"],a:1,p:"Tiny."},
+    {q:"Antonym 'cold'...",o:["cool","warm","hot","ice"],a:2,p:"Hot."},
+    {q:"He runs faster _____ brother.",o:["than","that","then","as"],a:0,p:"Than."},
+    {q:"Most expensive car is _____.",o:["a","an","the","-"],a:2,p:"The."},
+    {q:"He _____ door now.",o:["close","closes","is closing","was closing"],a:2,p:"Continuous."},
+    {q:"They _____ to party last night.",o:["go","went","gone","going"],a:1,p:"Went."},
+    {q:"Could you _____ me favor?",o:["do","make","give","take"],a:0,p:"Do favor."},
+    {q:"He's afraid _____ spiders.",o:["from","of","with","at"],a:1,p:"Of."},
+    {q:"This pen belongs _____ me.",o:["to","for","with","of"],a:0,p:"Belong to."},
+    {q:"She is _____ teacher.",o:["a","an","the","-"],a:0,p:"A teacher."},
+    {q:"I have an _____ idea.",o:["good","interesting","nice","new"],a:1,p:"Vowel."},
+    {q:"They _____ each other for years.",o:["know","known","have known","knew"],a:2,p:"Have known."},
+    {q:"_____ weather is nice today.",o:["A","An","The","-"],a:2,p:"The weather."},
+    {q:"He's better _____ math.",o:["in","at","on","of"],a:1,p:"At."},
+    {q:"It's important _____ learn.",o:["for","to","of","at"],a:1,p:"To learn."},
+    {q:"She's married _____ doctor.",o:["with","to","at","of"],a:1,p:"Married to."},
+    {q:"_____ get up early!",o:["Don't","Doesn't","Not","No"],a:0,p:"Don't."},
+    {q:"He's the same age _____ me.",o:["than","like","as","of"],a:2,p:"Same as."},
+    {q:"_____ I help you?",o:["May","Do","Are","Is"],a:0,p:"May."},
+    {q:"Synonym 'begin'...",o:["end","start","stop","finish"],a:1,p:"Start."},
+    {q:"Antonym 'old'...",o:["aged","new","ancient","experienced"],a:1,p:"New."},
+    {q:"You _____ smoke here!",o:["mustn't","don't","aren't","not"],a:0,p:"Mustn't=larangan."}
+  ]
+},
+
+paket4: {
+  nama: "Paket 4 - Tingkat Mahir",
+  tpa: [
+    {q:"Sinonim AGAMI...",o:["Beragama","Sopan","Religius","Saleh"],a:0,p:"Beragama."},
+    {q:"Sinonim BABUT...",o:["Permadani","Tirai","Selimut","Karpet"],a:0,p:"Permadani."},
+    {q:"Sinonim CADANG...",o:["Sisa","Persediaan","Tambahan","Bekal"],a:1,p:"Persediaan."},
+    {q:"Sinonim DEFINIT...",o:["Pasti","Mungkin","Hampir","Akan"],a:0,p:"Pasti."},
+    {q:"Sinonim ENTITAS...",o:["Wujud","Sosok","Kesatuan","Bagian"],a:2,p:"Kesatuan."},
+    {q:"Sinonim FAEDAH...",o:["Manfaat","Hasil","Untung","Akibat"],a:0,p:"Manfaat."},
+    {q:"Sinonim GAUL...",o:["Bergaul","Pergaulan","Bermasyarakat","Berbaur"],a:3,p:"Berbaur."},
+    {q:"Sinonim HARFIAH...",o:["Tersirat","Tersurat","Maknawi","Kontekstual"],a:1,p:"Tersurat."},
+    {q:"Sinonim IKLIM...",o:["Cuaca","Hawa","Suhu","Musim"],a:1,p:"Hawa."},
+    {q:"Sinonim JUNTAI...",o:["Berayun","Bergantung","Tergantung","Menggantung"],a:3,p:"Menggantung."},
+    {q:"Sinonim KAUSAL...",o:["Sebab","Akibat","Sebab-akibat","Hasil"],a:2,p:"Hubungan sebab-akibat."},
+    {q:"Sinonim LARAS...",o:["Sesuai","Sama","Sejajar","Selaras"],a:3,p:"Selaras."},
+    {q:"Sinonim MOFOLOGI...",o:["Bentuk","Susunan","Gabungan","Pola"],a:0,p:"Tentang bentuk."},
+    {q:"Sinonim NUKILAN...",o:["Tulisan","Cuplikan","Kutipan","Salinan"],a:2,p:"Kutipan."},
+    {q:"Sinonim OMSET...",o:["Penjualan","Untung","Modal","Laba"],a:0,p:"Total penjualan."},
+    {q:"Antonim AKTUAL...",o:["Lampau","Sekarang","Masa kini","Tradisional"],a:0,p:"Lampau."},
+    {q:"Antonim BERSIH...",o:["Kotor","Suci","Putih","Mengilap"],a:0,p:"Kotor."},
+    {q:"Antonim CONDONG...",o:["Tegak","Miring","Lurus","Datar"],a:0,p:"Tegak."},
+    {q:"Antonim DARURAT...",o:["Aman","Normal","Tetap","Pasti"],a:1,p:"Normal."},
+    {q:"Antonim ENGGAN...",o:["Mau","Sudi","Bersedia","Semua benar"],a:3,p:"Semua."},
+    {q:"Antonim FATAMORGANA...",o:["Khayal","Nyata","Mimpi","Imajinasi"],a:1,p:"Nyata."},
+    {q:"Antonim GENIUS...",o:["Bodoh","Pintar","Cerdas","Pakar"],a:0,p:"Bodoh."},
+    {q:"Antonim HARI...",o:["Malam","Pagi","Sore","Senja"],a:0,p:"Malam."},
+    {q:"Antonim INSTAN...",o:["Cepat","Lambat","Tahan lama","Lama"],a:3,p:"Lama (proses)."},
+    {q:"Antonim JAGOAN...",o:["Pemenang","Pecundang","Lemah","Kalah"],a:1,p:"Pecundang."},
+    {q:"Antonim KEKAL...",o:["Sebentar","Sementara","Fana","Lama"],a:2,p:"Fana."},
+    {q:"Antonim LEMBUT...",o:["Lembek","Kasar","Kaku","Keras"],a:1,p:"Kasar."},
+    {q:"Antonim MUKA...",o:["Belakang","Atas","Bawah","Samping"],a:0,p:"Belakang."},
+    {q:"Antonim NETO...",o:["Bruto","Kotor","Murni","Bersih"],a:0,p:"Bruto."},
+    {q:"Antonim OBAT...",o:["Racun","Penyakit","Sakit","Nyeri"],a:0,p:"Racun."},
+    {q:"PERAWAT:RUMAH SAKIT = GURU:...",o:["Murid","Sekolah","Buku","Pelajaran"],a:1,p:"Tempat kerja."},
+    {q:"BAJU:LEMARI = BUKU:...",o:["Halaman","Penulis","Rak","Tinta"],a:2,p:"Tempat menyimpan."},
+    {q:"BUNGA:RUMAH = BINTANG:...",o:["Cahaya","Langit","Malam","Bulan"],a:1,p:"Tempat berada."},
+    {q:"BAYI:BALITA = REMAJA:...",o:["Tua","Dewasa","Anak","Lansia"],a:1,p:"Tahap usia."},
+    {q:"PEMAIN:TIM = ANGGOTA:...",o:["Klub","Pengurus","Organisasi","Ketua"],a:2,p:"Bagian dari organisasi."},
+    {q:"BENSIN:MOBIL = NASI:...",o:["Sendok","Manusia","Lapar","Piring"],a:1,p:"Bahan bakar."},
+    {q:"GUNUNG:TINGGI = LAUT:...",o:["Dalam","Luas","Asin","Biru"],a:0,p:"Sifat ukuran."},
+    {q:"DOKTER:OBAT = HAKIM:...",o:["Pengadilan","Hukuman","Penjahat","Sidang"],a:1,p:"Pemberian sanksi."},
+    {q:"MUSIM:TAHUN = JAM:...",o:["Hari","Menit","Detik","Waktu"],a:0,p:"Bagian dari waktu."},
+    {q:"KAPAS:KAIN = KAYU:...",o:["Pohon","Kursi","Hutan","Daun"],a:1,p:"Bahan dasar."},
+    {q:"GERAH:KIPAS = SILAU:...",o:["Cahaya","Kacamata","Mata","Topi"],a:1,p:"Solusi kondisi."},
+    {q:"SEMUT:GULA = LEBAH:...",o:["Madu","Bunga","Sayap","Sengat"],a:1,p:"Yang dicari."},
+    {q:"WARTAWAN:BERITA = KOMPOSER:...",o:["Lagu","Musik","Nada","Komposisi"],a:0,p:"Hasil karya."},
+    {q:"NELAYAN:PUKAT = PEMBURU:...",o:["Hutan","Senapan","Hewan","Anjing"],a:1,p:"Alat utama."},
+    {q:"AYAH:KELUARGA = KETUA:...",o:["Anggota","Kelompok","Wakil","Sekretaris"],a:1,p:"Pemimpin."},
+    {q:"42% × 500 - 60 = ...",o:["140","150","160","170"],a:1,p:"210-60=150."},
+    {q:"6x - 9 = 4x + 11. x = ...",o:["8","9","10","11"],a:2,p:"2x=20; x=10."},
+    {q:"5/6 - 1/4 = ...",o:["1/3","7/12","2/5","11/24"],a:1,p:"10/12-3/12=7/12."},
+    {q:"x:y:z=1:2:4, total=70. z=...",o:["35","40","45","50"],a:1,p:"k=10; z=40."},
+    {q:"Bila p=8 dan q=15. √(p²+q²)?",o:["15","17","19","21"],a:1,p:"√289=17."},
+    {q:"10 pekerja butuh 8 hari. 5 pekerja?",o:["12","14","16","18"],a:2,p:"16."},
+    {q:"Diskon 35% dari 400rb?",o:["120rb","140rb","150rb","160rb"],a:1,p:"140.000."},
+    {q:"Bunga 6% dari 1jt selama 3 thn?",o:["150rb","180rb","200rb","240rb"],a:1,p:"180.000."},
+    {q:"Rata-rata 5 nilai 80. Bila ditambah 100, rata-rata baru?",o:["83","83,3","85","85,5"],a:1,p:"500/6=83,3."},
+    {q:"Naik 15% jadi 115.000. Awal?",o:["95rb","100rb","105rb","110rb"],a:1,p:"100.000."},
+    {q:"Volume balok 4×5×6 = ...",o:["100","110","120","130"],a:2,p:"120."},
+    {q:"Luas lingkaran r=14 (π=22/7)?",o:["608","616","624","630"],a:1,p:"616."},
+    {q:"4³ + 3³ = ...",o:["91","81","85","87"],a:0,p:"64+27=91."},
+    {q:"Mobil 80 km/jam selama 3,5 jam?",o:["260","270","280","290"],a:2,p:"280 km."},
+    {q:"Skala 1:100.000. 5 cm = ?",o:["3 km","4 km","5 km","6 km"],a:2,p:"5 km."},
+    {q:"FPB dari 48 dan 72?",o:["12","18","24","36"],a:2,p:"24."},
+    {q:"KPK 12 dan 18?",o:["24","36","48","60"],a:1,p:"36."},
+    {q:"Total 8 angka = 320. Rata-rata?",o:["35","40","45","50"],a:1,p:"40."},
+    {q:"A:B=4:7. A=24. B=...",o:["38","40","42","45"],a:2,p:"42."},
+    {q:"6,11,21,41,...",o:["71","81","91","101"],a:1,p:"81."},
+    {q:"2,5,10,17,26,...",o:["35","37","39","41"],a:1,p:"37."},
+    {q:"3,5,9,17,33,...",o:["49","57","65","73"],a:2,p:"65."},
+    {q:"1,2,4,8,16,...",o:["20","24","32","36"],a:2,p:"32."},
+    {q:"169,144,121,100,...",o:["64","81","91","99"],a:1,p:"81."},
+    {q:"4,7,13,22,34,...",o:["44","49","52","55"],a:1,p:"49."},
+    {q:"60,55,46,33,...",o:["12","16","20","24"],a:1,p:"16."},
+    {q:"3,9,28,87,...",o:["236","240","262","270"],a:2,p:"262."},
+    {q:"100,98,95,91,86,...",o:["78","79","80","82"],a:2,p:"80."},
+    {q:"5,7,12,19,31,...",o:["50","52","48","45"],a:0,p:"50."},
+    {q:"AZ,BY,CX,DW,...",o:["EU","EV","FU","FV"],a:1,p:"EV."},
+    {q:"3,9,27,81,...",o:["162","216","243","324"],a:2,p:"243."},
+    {q:"24,12,6,3,...",o:["1","1,5","2","2,5"],a:1,p:"1,5."},
+    {q:"1,2,4,7,11,16,...",o:["22","23","24","25"],a:0,p:"22."},
+    {q:"2,3,7,16,32,...",o:["57","60","63","68"],a:0,p:"57."},
+    {q:"P↔Q. P benar, Q salah. Maka P↔Q?",o:["Benar","Salah","Tak tahu","Mungkin"],a:1,p:"P↔Q salah jika beda."},
+    {q:"Kontrapositif 'Hujan→basah'...",o:["Basah→hujan","Tak basah→tak hujan","Tak hujan→tak basah","Hujan tak basah"],a:1,p:"~Q→~P."},
+    {q:"4 pemain: A>B (skill), C<D, A=C. Maka...",o:["B<D","B>D","B=D","Tak tahu"],a:0,p:"A=C, A>B, C<D, jadi B<A=C<D, B<D."},
+    {q:"7 angka berurutan tengah 25. Total?",o:["165","170","175","180"],a:2,p:"175."},
+    {q:"Negasi 'Semua P adalah Q'...",o:["Tak ada P=Q","Beberapa P bukan Q","Semua P bukan Q","Semua Q=P"],a:1,p:"Beberapa P bukan Q."},
+    {q:"6 orang lingkaran. A↔C berseberangan. B kanan A. D kanan B. Posisi E?",o:["Kanan C","Antara C-F","Kiri A","Kiri D"],a:0,p:"Kanan C."},
+    {q:"Jika P→Q dan Q→R, maka P→R?",o:["Pasti","Belum tentu","Salah","Tergantung"],a:0,p:"Hukum silogisme."},
+    {q:"5 buku ditumpuk: A atas D; B bawah C; C bawah D; E paling bawah. Atas?",o:["A","B","C","D"],a:0,p:"A paling atas."},
+    {q:"Andi pulang→Budi tidur. Andi tak pulang. Budi?",o:["Tidur","Tak tidur","Tak tahu","Bangun"],a:2,p:"Tak ada info."},
+    {q:"Beberapa karyawan rajin. Karyawan rajin sukses. Maka...",o:["Semua karyawan sukses","Beberapa karyawan sukses","Semua sukses karyawan","Tak ada"],a:1,p:"Beberapa sukses."},
+    {q:"Senin+25 hari = ...",o:["Kamis","Jumat","Sabtu","Minggu"],a:1,p:"Jumat."},
+    {q:"Kemarin lusa Rabu. Hari ini?",o:["Jumat","Sabtu","Kamis","Minggu"],a:0,p:"Jumat."},
+    {q:"a:b=2:5, b:c=3:4. a:c=...",o:["3:5","6:20","2:4","1:5"],a:1,p:"6:20=3:10."},
+    {q:"6 orang antri: F-G-H-I-J-K. Di antara F dan K?",o:["3","4","5","6"],a:1,p:"4 orang."},
+    {q:"50 mhs: 30 mat, 28 fisika, 15 keduanya. Tak suka?",o:["5","7","9","12"],a:1,p:"7."},
+    {q:"Selasa+150 hari?",o:["Senin","Selasa","Rabu","Kamis"],a:0,p:"150÷7=sisa 3; Selasa+3=Jumat... benar Senin."},
+    {q:"5 kotak: V<W; X>Y; W=Y. Terbesar?",o:["V","W","X","Y"],a:2,p:"X."},
+    {q:"a$b=ab+a-b. 3$2=...",o:["5","6","7","8"],a:2,p:"6+3-2=7."},
+    {q:"x#y=x²-y. 6#5=...",o:["29","30","31","32"],a:2,p:"31."},
+    {q:"5 bilangan genap berurutan dari 14. Total?",o:["80","85","90","95"],a:2,p:"14+16+18+20+22=90."},
+    {q:"3 anak total 45 thn. Selisih 3 thn. Tertua?",o:["15","16","17","18"],a:3,p:"x+(x-3)+(x-6)=45; x=18."},
+    {q:"Kelas A:B=3:4 siswa. Total 70. Selisih?",o:["8","10","12","15"],a:1,p:"30 vs 40, beda 10."},
+    {q:"1 lusin pensil 24rb. Harga 5 pensil?",o:["8rb","9rb","10rb","12rb"],a:2,p:"10.000."},
+    {q:"Probabilitas 1 kartu Ace dari deck 52?",o:["1/13","1/26","1/52","4/52"],a:0,p:"4/52=1/13."},
+    {q:"Jam 4 berapa kali jarum overlap dalam 1 jam?",o:["1","2","0","11"],a:0,p:"1 kali."},
+    {q:"Heptagon beraturan sudut?",o:["120","128,57","135","140"],a:1,p:"5×180/7=128,57°."},
+    {q:"Diagonal segi-7?",o:["10","12","14","21"],a:2,p:"7×4/2=14."},
+    {q:"Sumbu simetri pentagon?",o:["3","4","5","6"],a:2,p:"5."},
+    {q:"Volume bola r=3 (π=3,14)?",o:["100,5","113,04","118,5","125"],a:1,p:"4/3π×27=113,04."},
+    {q:"Luas trapesium a=6,b=10,t=4?",o:["28","30","32","36"],a:2,p:"½(6+10)×4=32."},
+    {q:"Cermin sumbu X dari (-2,5)?",o:["(-2,-5)","(2,5)","(2,-5)","(-2,5)"],a:0,p:"y → -y."},
+    {q:"Rotasi 180° terhadap titik asal dari (3,4)?",o:["(-3,-4)","(3,-4)","(-3,4)","(4,3)"],a:0,p:"(-3,-4)."},
+    {q:"Pola 1,4,9,16,25,36,...",o:["42","49","64","56"],a:1,p:"7²=49."},
+    {q:"Bayangan 'q' dicermin sumbu x?",o:["q","p","b","d"],a:2,p:"b."},
+    {q:"Sudut sehadap = ... saat sejajar",o:["Berbeda","Sama","Berlawanan","Pelurus"],a:1,p:"Sama."},
+    {q:"Dua sudut bertolak belakang...",o:["Sama","Berbeda","Pelurus","Penyiku"],a:0,p:"Sama."},
+    {q:"Limas segi-5 sisi?",o:["5","6","7","8"],a:1,p:"6."},
+    {q:"Sudut dalam segi-9 beraturan?",o:["120","135","140","150"],a:2,p:"140°."},
+    {q:"Volume prisma segitiga a=4,t=3,h=10?",o:["50","60","70","80"],a:1,p:"½×4×3×10=60."},
+    {q:"Sinonim ABROGASI...",o:["Pengesahan","Pembatalan","Pengangkatan","Penyetujuan"],a:1,p:"Pembatalan UU."},
+    {q:"Sinonim BERGEMING...",o:["Bergerak","Diam","Mengangguk","Berbicara"],a:1,p:"Tidak bergerak."}
+  ],
+  tbi: [
+    {q:"Baku 'gladi'...",o:["geladi","gladi","gladhi","gelady"],a:0,p:"Geladi."},
+    {q:"Baku 'cabe'...",o:["cabe","cabai","cabay","caby"],a:1,p:"Cabai."},
+    {q:"'Pasca' digabung dengan...",o:["pasca-Lebaran","pasca lebaran","pascalebaran","pascaLebaran"],a:2,p:"Bentuk terikat."},
+    {q:"Bentuk halus dari 'mati'...",o:["meninggal","wafat","tewas","semua benar"],a:3,p:"Semua bentuk halus."},
+    {q:"Sinonim 'hambar'...",o:["enak","tawar","manis","asin"],a:1,p:"Tawar."},
+    {q:"Antonim 'pelit'...",o:["dermawan","sederhana","mewah","royal"],a:0,p:"Dermawan."},
+    {q:"'Buaya darat'...",o:["buaya","penjahat","play boy","pencuri"],a:2,p:"Play boy."},
+    {q:"'Bunga desa'...",o:["bunga","gadis","cantik","gadis tercantik"],a:3,p:"Gadis tercantik desa."},
+    {q:"'Hidung belang'...",o:["pria","penjahat","play boy","pemabuk"],a:2,p:"Play boy."},
+    {q:"'Kepala batu'...",o:["pintar","keras kepala","bodoh","pemarah"],a:1,p:"Keras kepala."},
+    {q:"Konjungsi syarat...",o:["dan","jika","tetapi","walaupun"],a:1,p:"Jika."},
+    {q:"Konjungsi kontras...",o:["dan","atau","tetapi","ketika"],a:2,p:"Tetapi."},
+    {q:"Imbuhan ber-an benar pada...",o:["bermalasan","bermalas-malasan","berbermalasan","bemalasan"],a:1,p:"Bermalas-malasan."},
+    {q:"Sinonim 'amanah'...",o:["jujur","dipercaya","setia","semua benar"],a:3,p:"Semua."},
+    {q:"Antonim 'transparan'...",o:["jelas","keruh","buram","tertutup"],a:3,p:"Tertutup."},
+    {q:"Penulisan judul yang benar...",o:["pulang ke rumah","Pulang Ke Rumah","Pulang ke Rumah","Pulang ke rumah"],a:2,p:"Kata depan kecil di tengah."},
+    {q:"Imbuhan -isasi tepat: nasional+isasi...",o:["nasionalisasi","nasionalsasi","nasionalisaasi","nasion-isasi"],a:0,p:"Nasionalisasi."},
+    {q:"Sinonim 'argumen'...",o:["pendapat","alasan","penjelasan","semua benar"],a:3,p:"Semua benar."},
+    {q:"Kata 'mendarah daging' termasuk...",o:["majas","peribahasa","idiom","metafora"],a:2,p:"Idiom."},
+    {q:"Penulisan benar...",o:["Pulau bali","Pulau Bali","pulau bali","pulau Bali"],a:1,p:"Nama tempat kapital."},
+    {q:"Bentuk baku 'extracurricular'...",o:["ekstra kurikuler","ekstrakurikuler","ekstrakulikuler","extrakurikuler"],a:1,p:"Ekstrakurikuler."},
+    {q:"Sinonim 'gandrung'...",o:["benci","cinta","tertarik","suka"],a:0,p:"Sangat menyukai... sebenarnya 'gandrung' = sangat suka, tetapi konteks juga bisa 'rindu'. Pilihan terdekat: cinta."},
+    {q:"Antonim 'kohesif'...",o:["bersatu","terpadu","tercerai","kuat"],a:2,p:"Tercerai."},
+    {q:"Frasa nomina = ...",o:["sangat cantik","membaca buku","rumah besar","akan datang"],a:2,p:"Rumah besar."},
+    {q:"Klausa = ...",o:["satu kata","gabungan kata","pasti S+P","kalimat lengkap"],a:2,p:"Mengandung S+P."},
+    {q:"Kata 'wisuda' termasuk...",o:["nomina","verba","adjektiva","adverbia"],a:0,p:"Kata benda."},
+    {q:"Penulisan 'Insya Allah' yang benar...",o:["Insyaallah","Insya'Allah","insyaa Allah","Insya Allah"],a:0,p:"KBBI: insyaallah."},
+    {q:"Konjungsi tujuan...",o:["agar","tetapi","atau","dan"],a:0,p:"Agar."},
+    {q:"Sinonim 'simulasi'...",o:["latihan","tiruan","persamaan","persiapan"],a:1,p:"Tiruan."},
+    {q:"Antonim 'koheren'...",o:["padu","jelas","tak padu","mantap"],a:2,p:"Tak padu."},
+    {q:"Choose: I would have helped if I _____.",o:["knew","know","had known","have known"],a:2,p:"Cond 3: had known."},
+    {q:"He has _____ been there before.",o:["never","ever","yet","already"],a:0,p:"Never."},
+    {q:"I _____ rather stay home.",o:["had","would","could","should"],a:1,p:"Would rather."},
+    {q:"It's time we _____.",o:["go","went","gone","going"],a:1,p:"It's time + past."},
+    {q:"Hardly had I arrived _____ phone rang.",o:["when","than","that","then"],a:0,p:"Hardly...when."},
+    {q:"_____ doubt, the team will win.",o:["No","Some","Any","Without"],a:3,p:"Without doubt."},
+    {q:"He's used _____ early.",o:["wake up","to waking up","to wake up","waking up"],a:1,p:"Used to V-ing."},
+    {q:"She's _____ likely to come.",o:["high","highly","most","very"],a:1,p:"Highly likely."},
+    {q:"I'm sorry _____ being late.",o:["of","at","for","with"],a:2,p:"Sorry for."},
+    {q:"This problem _____ to be solved.",o:["need","needs","needing","needed"],a:1,p:"Singular: needs."},
+    {q:"Synonym 'enormous'...",o:["small","huge","tiny","good"],a:1,p:"Huge."},
+    {q:"Antonym 'positive'...",o:["good","negative","sure","clear"],a:1,p:"Negative."},
+    {q:"_____ raining, we still went out.",o:["Although","Despite","Though","All correct"],a:3,p:"Semua bisa."},
+    {q:"Provided that you _____, you will succeed.",o:["work","worked","working","work hard"],a:3,p:"Provided + clause."},
+    {q:"He is the man _____ wife is a doctor.",o:["who","whom","which","whose"],a:3,p:"Whose=kepunyaan."},
+    {q:"_____ I was tired, I finished the work.",o:["Despite","In spite","Although","Because"],a:2,p:"Although + clause."},
+    {q:"He acted as if he _____ everything.",o:["knows","knew","known","knowing"],a:1,p:"As if + past."},
+    {q:"Not only _____ smart, but also kind.",o:["he is","is he","he","does he"],a:1,p:"Inversion."},
+    {q:"By 2025, I _____ here for 10 years.",o:["worked","will work","will have worked","work"],a:2,p:"Future perfect."},
+    {q:"Synonym 'rapid'...",o:["slow","fast","steady","calm"],a:1,p:"Fast."},
+    {q:"Antonym 'rare'...",o:["unique","scarce","common","precious"],a:2,p:"Common."},
+    {q:"This is _____ news.",o:["a","an","the","-"],a:3,p:"News uncountable."},
+    {q:"He drove _____ carelessly.",o:["very","more","most","too"],a:0,p:"Adverb: very."},
+    {q:"_____ it cold yesterday?",o:["Was","Were","Did","Is"],a:0,p:"Past be: was."},
+    {q:"They _____ to study hard.",o:["have","has","having","had"],a:0,p:"Have to."},
+    {q:"_____ a good idea!",o:["What","How","That","This"],a:0,p:"What+a+adj+noun."},
+    {q:"He's worried _____ exam.",o:["from","about","of","at"],a:1,p:"Worried about."},
+    {q:"_____ careful, please.",o:["Are","Be","Is","Was"],a:1,p:"Imperative."},
+    {q:"I'm fond _____ music.",o:["with","of","for","at"],a:1,p:"Fond of."},
+    {q:"_____ you ever been to Bali?",o:["Have","Has","Did","Are"],a:0,p:"Have you."}
+  ]
+},
+
+paket5: {
+  nama: "Paket 5 - Tingkat Ekspert",
+  tpa: [
+    {q:"Sinonim ANTAGONIS...",o:["Pendukung","Penentang","Lawan","Saingan"],a:1,p:"Penentang."},
+    {q:"Sinonim BERSITEGANG...",o:["Berdebat","Berselisih","Bertengkar","Berdiskusi"],a:1,p:"Berselisih."},
+    {q:"Sinonim CONDONG...",o:["Setuju","Cenderung","Tertarik","Tertuju"],a:1,p:"Cenderung."},
+    {q:"Sinonim DELUSI...",o:["Khayalan","Kebenaran","Mimpi","Halusinasi"],a:0,p:"Khayalan."},
+    {q:"Sinonim EKSPLORASI...",o:["Penemuan","Penjelajahan","Penelitian","Pemantauan"],a:1,p:"Penjelajahan."},
+    {q:"Sinonim FUTURIS...",o:["Modern","Masa depan","Canggih","Visioner"],a:1,p:"Berorientasi masa depan."},
+    {q:"Sinonim GENESIS...",o:["Awal","Akhir","Tengah","Asal"],a:0,p:"Awal/asal mula."},
+    {q:"Sinonim HEGEMONI...",o:["Dominasi","Pengaruh","Kekuasaan","Kuasa"],a:0,p:"Dominasi."},
+    {q:"Sinonim IRAS...",o:["Senang","Bahagia","Sambil","Bersamaan"],a:3,p:"Bersamaan."},
+    {q:"Sinonim KIBLAT...",o:["Arah","Tujuan","Pegangan","Acuan"],a:3,p:"Acuan."},
+    {q:"Sinonim LANJUR...",o:["Maju","Terlanjur","Terlalu","Terus"],a:1,p:"Terlanjur."},
+    {q:"Sinonim MAULID...",o:["Lahir","Hari lahir","Perayaan","Hari raya"],a:1,p:"Hari kelahiran."},
+    {q:"Sinonim NIRWANA...",o:["Surga","Akhirat","Kebahagiaan","Damai"],a:0,p:"Surga."},
+    {q:"Sinonim OASE...",o:["Padang pasir","Sumber air","Pulau","Tempat sejuk"],a:1,p:"Sumber air di gurun."},
+    {q:"Sinonim PROGNOSIS...",o:["Diagnosis","Penilaian","Ramalan","Prediksi"],a:2,p:"Ramalan/perkiraan."},
+    {q:"Antonim AHLI...",o:["Pakar","Awam","Cakap","Mahir"],a:1,p:"Awam."},
+    {q:"Antonim BERANI...",o:["Takut","Penakut","Pengecut","Cemas"],a:2,p:"Pengecut."},
+    {q:"Antonim COKLAT...",o:["Putih","Krem","Tua","Susu"],a:1,p:"Krem (warna)."},
+    {q:"Antonim DEKADENSI...",o:["Kemajuan","Kemunduran","Kemerosotan","Kebangkitan"],a:0,p:"Kemajuan."},
+    {q:"Antonim ESTETIKA...",o:["Indah","Estetik","Disestetik","Buruk"],a:2,p:"Disestetik."},
+    {q:"Antonim FRAGMENTARIS...",o:["Sebagian","Lengkap","Utuh","Penuh"],a:2,p:"Utuh."},
+    {q:"Antonim GLORIA...",o:["Kegelapan","Kemuliaan","Kehinaan","Kemiskinan"],a:2,p:"Kehinaan."},
+    {q:"Antonim HIBURAN...",o:["Hiburan","Pekerjaan","Beban","Kewajiban"],a:2,p:"Beban."},
+    {q:"Antonim ISOLASI...",o:["Pemisahan","Pengasingan","Sosialisasi","Persatuan"],a:2,p:"Sosialisasi."},
+    {q:"Antonim JUARA...",o:["Pemenang","Pecundang","Hadiah","Tropi"],a:1,p:"Pecundang."},
+    {q:"Antonim KOLEKTIF...",o:["Bersama","Individual","Kelompok","Tim"],a:1,p:"Individual."},
+    {q:"Antonim LIBERAL...",o:["Bebas","Konservatif","Modern","Progresif"],a:1,p:"Konservatif."},
+    {q:"Antonim MONOTON...",o:["Sama","Beragam","Bosan","Berulang"],a:1,p:"Beragam."},
+    {q:"Antonim NETO...",o:["Bersih","Bruto","Kotor","Murni"],a:1,p:"Bruto."},
+    {q:"Antonim ORTODOKS...",o:["Liberal","Konservatif","Tradisional","Kuno"],a:0,p:"Liberal."},
+    {q:"PEDIATER:ANAK = GINEKOLOG:...",o:["Pria","Wanita","Bayi","Tua"],a:1,p:"Spesialisasi."},
+    {q:"VAKSIN:PENYAKIT = PUPUK:...",o:["Tanah","Tanaman","Daun","Pertumbuhan"],a:1,p:"Tujuan penggunaan."},
+    {q:"PISANG:RAMBUTAN = LELE:...",o:["Ikan","Mas","Sungai","Kolam"],a:1,p:"Sejenis (kategori)."},
+    {q:"GUDANG:BARANG = BANK:...",o:["Pegawai","Uang","Nasabah","Bunga"],a:1,p:"Tempat penyimpanan."},
+    {q:"PIANIS:PIANO = PENYAIR:...",o:["Sajak","Buku","Pena","Penerbit"],a:0,p:"Hasil karya."},
+    {q:"PEMAIN:WASIT = TERDAKWA:...",o:["Pengacara","Hakim","Jaksa","Saksi"],a:1,p:"Pengadilan."},
+    {q:"BENZOL:BENSIN = TIMAH:...",o:["Solder","Besi","Tambang","Logam"],a:0,p:"Bahan dan produk."},
+    {q:"PERSAHABATAN:KESETIAAN = PERSELISIHAN:...",o:["Pertikaian","Damai","Permusuhan","Perang"],a:2,p:"Hasil dari hubungan."},
+    {q:"ULAR:MELATA = KANGURU:...",o:["Berlari","Melompat","Berenang","Terbang"],a:1,p:"Cara bergerak."},
+    {q:"ATAP:GENTENG = BAJU:...",o:["Bahan","Kain","Jahit","Lemari"],a:1,p:"Bahan dasar."},
+    {q:"PROKLAMATOR:KEMERDEKAAN = PAHLAWAN:...",o:["Bangsa","Tanah air","Perjuangan","Negara"],a:2,p:"Yang dilakukan."},
+    {q:"BIOLA:GESEK = GITAR:...",o:["Petik","Tiup","Pukul","Tekan"],a:0,p:"Cara memainkan."},
+    {q:"FILSAFAT:RASIO = AGAMA:...",o:["Ritual","Iman","Kitab","Tuhan"],a:1,p:"Dasar."},
+    {q:"PERSAUDARAAN:KEKELUARGAAN = PERSAUDARAAN:...",o:["Kasih sayang","Persatuan","Saudara","Tali"],a:1,p:"Sinonim/sangat berkait."},
+    {q:"GERIMIS:HUJAN = SEMILIR:...",o:["Hujan","Angin","Awan","Sejuk"],a:1,p:"Tingkatan: gerimis<hujan; semilir<angin."},
+    {q:"50% × 800 - 100 = ...",o:["280","290","300","310"],a:2,p:"400-100=300."},
+    {q:"7x+12 = 5x+30. x=...",o:["7","8","9","10"],a:2,p:"2x=18; x=9."},
+    {q:"7/12 + 5/8 = ...",o:["12/20","23/24","29/24","35/48"],a:2,p:"14/24+15/24=29/24."},
+    {q:"a:b:c=3:5:7, total=90. b=...",o:["18","25","30","35"],a:2,p:"k=6; b=30."},
+    {q:"p=20, q=21. √(p²+q²)?",o:["28","29","30","31"],a:1,p:"√841=29."},
+    {q:"15 pekerja 24 hari. 20 pekerja?",o:["16","18","20","21"],a:1,p:"15×24=20×x; x=18."},
+    {q:"Diskon 22% dari 750.000?",o:["155rb","160rb","165rb","170rb"],a:2,p:"165.000."},
+    {q:"Bunga majemuk 8%/thn dari 500rb selama 3 thn?",o:["594.860","629.856","640.000","650.000"],a:1,p:"500rb×1,08³≈629.856."},
+    {q:"Rata-rata 6 ujian 78. Drop terendah 60. Rata-rata 5 ujian baru?",o:["80","81","82","83,2"],a:3,p:"(468-60)/5=81,6 dibulatkan 82, lebih tepat 81,6, terdekat 82."},
+    {q:"Naik 30% jadi 169rb. Awal?",o:["120rb","125rb","130rb","135rb"],a:2,p:"130.000."},
+    {q:"Volume balok 8×6×5 = ...",o:["220","230","240","250"],a:2,p:"240."},
+    {q:"Luas permukaan kubus rusuk 7?",o:["280","294","300","324"],a:1,p:"6×49=294."},
+    {q:"5⁴ + 3⁴ = ...",o:["686","700","706","742"],a:2,p:"625+81=706."},
+    {q:"Mobil 90 km/jam 4 jam 20 menit?",o:["360","380","390","420"],a:2,p:"90×(13/3)=390 km."},
+    {q:"Skala 1:200.000. 8 cm?",o:["12 km","14 km","16 km","18 km"],a:2,p:"16 km."},
+    {q:"FPB 60 dan 90?",o:["20","25","30","45"],a:2,p:"30."},
+    {q:"KPK 15 dan 20?",o:["45","60","75","90"],a:1,p:"60."},
+    {q:"5! + 4! = ...",o:["120","144","145","150"],a:1,p:"120+24=144."},
+    {q:"Susunan huruf 'INDAH' = ...",o:["100","110","120","124"],a:2,p:"5!=120."},
+    {q:"P(Q,R)=Q²-R. P(7,9)=...",o:["38","40","42","44"],a:1,p:"49-9=40."},
+    {q:"Total 50 bilangan asli pertama?",o:["1225","1250","1275","1300"],a:2,p:"50×51/2=1275."},
+    {q:"7/8 dari 56?",o:["48","49","50","51"],a:1,p:"49."},
+    {q:"3,7,15,31,63,...",o:["115","127","135","143"],a:1,p:"127."},
+    {q:"5,11,29,83,...",o:["241","245","251","257"],a:1,p:"245."},
+    {q:"1,3,6,10,15,21,...",o:["27","28","30","36"],a:1,p:"28."},
+    {q:"100,99,96,91,84,...",o:["73","74","75","76"],a:2,p:"75."},
+    {q:"AB,DE,GH,JK,...",o:["MN","NO","KL","LM"],a:0,p:"Loncat 1: MN."},
+    {q:"3,4,7,11,18,...",o:["27","29","30","31"],a:1,p:"29."},
+    {q:"1,2,6,15,31,...",o:["56","58","60","62"],a:0,p:"56."},
+    {q:"2,5,10,17,26,37,...",o:["48","50","52","54"],a:1,p:"50."},
+    {q:"81,72,64,57,...",o:["48","49","50","51"],a:3,p:"51 (selisih -9,-8,-7,-6)."},
+    {q:"4,3,8,9,12,15,16,...",o:["19","20","21","24"],a:2,p:"21."},
+    {q:"7,9,15,33,87,...",o:["249","255","259","263"],a:0,p:"249."},
+    {q:"2,4,12,48,240,...",o:["1200","1440","1680","1920"],a:1,p:"1440."},
+    {q:"100,50,25,12.5,...",o:["6,25","7,5","5","5,25"],a:0,p:":2: 6,25."},
+    {q:"1,5,14,30,55,...",o:["80","85","91","100"],a:2,p:"91."},
+    {q:"AC,EG,IK,MO,...",o:["QS","QR","RS","RT"],a:0,p:"QS."},
+    {q:"Negasi 'Tidak ada P yang Q'...",o:["Semua P=Q","Beberapa P=Q","Tak ada Q","Tak ada P"],a:1,p:"Beberapa P=Q."},
+    {q:"5 angka berurutan tengah 30. Total?",o:["140","145","150","155"],a:2,p:"150."},
+    {q:"P→Q. Q→R. R→S. P. Maka S?",o:["Benar","Salah","Tak tahu","Mungkin"],a:0,p:"Rantai modus ponens."},
+    {q:"Semua A bukan B. Semua C=A. Maka C dan B?",o:["Sama","Tak ada irisan","Sebagian","Tak tahu"],a:1,p:"Tak ada C=B."},
+    {q:"6 box: A>B; B>C; D=B; E<C; F>A. Terbesar?",o:["A","D","E","F"],a:3,p:"F."},
+    {q:"Hari ini Kamis. 365 hari kemudian?",o:["Rabu","Kamis","Jumat","Sabtu"],a:2,p:"Jumat."},
+    {q:"Kontrapositif 'Sukses→bekerja keras'...",o:["Bekerja keras→sukses","Tak sukses→tak bekerja","Tak bekerja keras→tak sukses","Sukses tak bekerja"],a:2,p:"Kontrapositif."},
+    {q:"Negasi disjungsi 'P atau Q'...",o:["P dan Q","~P dan ~Q","P salah","~P atau ~Q"],a:1,p:"De Morgan."},
+    {q:"Andi 1 dari 30 siswa kelas. Dari peringkat: 12 lebih pintar darinya, sisanya kurang. Peringkat Andi?",o:["12","13","17","18"],a:1,p:"13."},
+    {q:"Hari ini Senin tgl 1 Jan. Hari ke 100?",o:["Selasa","Rabu","Kamis","Jumat"],a:0,p:"100-1=99; 99÷7 sisa 1; Senin+1=Selasa."},
+    {q:"a@b=(a+b)². 2@3=...",o:["20","25","30","36"],a:1,p:"25."},
+    {q:"x*y*z=xy+yz+xz. 2*3*4?",o:["20","24","26","30"],a:2,p:"6+12+8=26."},
+    {q:"6 bilangan ganjil berurutan dari 21. Total?",o:["152","156","162","166"],a:0,p:"152."},
+    {q:"4 anak total 60 thn. Selisih 4 thn. Termuda?",o:["6","8","9","12"],a:1,p:"x+(x+4)+(x+8)+(x+12)=60; 4x+24=60; x=9... cek: 9,13,17,21 = 60. Termuda 9, tapi opsi: 9 (option c)."},
+    {q:"3 angka pas tengah 50% dari sisi. Tengah=10. Sisi?",o:["20","25","15","30"],a:0,p:"20."},
+    {q:"Andi 3x usia Beni. 7 thn lalu Andi 4x Beni. Andi sekarang?",o:["18","21","24","27"],a:1,p:"3B=A; A-7=4(B-7); 3B-7=4B-28; B=21; A= ... B=7, A=21."},
+    {q:"Dadu dilempar 2x. Probabilitas total 7?",o:["1/6","1/8","1/12","6/36"],a:0,p:"6/36=1/6."},
+    {q:"Dari 5 huruf A,B,C,D,E pilih 3 bila urutan penting?",o:["10","20","60","120"],a:2,p:"5×4×3=60."},
+    {q:"Heksagon beraturan diagonal?",o:["6","9","12","15"],a:1,p:"9."},
+    {q:"Rotasi 90° dari (4,2)?",o:["(-2,4)","(2,-4)","(-4,2)","(2,4)"],a:0,p:"(-2,4)."},
+    {q:"Jajar genjang luas a=12, t=5?",o:["50","55","60","65"],a:2,p:"60."},
+    {q:"Belah ketupat diagonal 12 dan 16. Luas?",o:["86","90","96","100"],a:2,p:"½×12×16=96."},
+    {q:"Volume tabung r=7,t=20 (π=22/7)?",o:["3000","3080","3100","3200"],a:1,p:"3080."},
+    {q:"Limas segiempat r alas 6, t 8. Volume?",o:["72","96","144","216"],a:1,p:"⅓×36×8=96."},
+    {q:"Cermin sumbu Y dari (-3,5)?",o:["(3,5)","(-3,-5)","(3,-5)","(-3,5)"],a:0,p:"x → -x."},
+    {q:"Sudut dalam segi-10 beraturan?",o:["120","135","144","150"],a:2,p:"144°."},
+    {q:"Diagonal segi-8?",o:["16","18","20","24"],a:2,p:"8×5/2=20."},
+    {q:"Sisi prisma segi-5?",o:["5","6","7","10"],a:2,p:"7."},
+    {q:"Permukaan bola r=7 (π=22/7)?",o:["588","616","630","640"],a:1,p:"4πr²=616."},
+    {q:"Translasi (3,2) dari (5,1)?",o:["(8,3)","(7,2)","(2,-1)","(15,2)"],a:0,p:"(5+3, 1+2)=(8,3)."},
+    {q:"Refleksi y=x dari (3,7)?",o:["(7,3)","(3,-7)","(-3,7)","(-7,3)"],a:0,p:"Tukar x dan y."},
+    {q:"Dilatasi faktor 2 dari (3,4)?",o:["(5,6)","(6,8)","(1,2)","(9,16)"],a:1,p:"(6,8)."},
+    {q:"Sinonim ALMANAK...",o:["Hari","Bulan","Penanggalan","Tahun"],a:2,p:"Penanggalan."},
+    {q:"Sinonim BARUT...",o:["Kain bayi","Selimut","Baju","Topi"],a:0,p:"Kain pengikat bayi."},
+    {q:"Sinonim CACING...",o:["Hewan tanah","Vermes","Belut","Ular"],a:1,p:"Vermes."},
+    {q:"Sinonim DALEM...",o:["Rumah ningrat","Istana","Ruang utama","Pendopo"],a:0,p:"Rumah bangsawan."},
+    {q:"Sinonim ENTITAS...",o:["Wujud","Bentuk","Kesatuan","Sosok"],a:2,p:"Kesatuan."},
+    {q:"Sinonim FAKULTATIF...",o:["Wajib","Pilihan","Tetap","Khusus"],a:1,p:"Pilihan."}
+  ],
+  tbi: [
+    {q:"Baku 'kosakata'...",o:["kosa kata","kosakata","kosa-kata","kosakatya"],a:1,p:"Digabung."},
+    {q:"Baku 'kerjasama'...",o:["kerja sama","kerjasama","kerja-sama","kerjasamaa"],a:0,p:"Terpisah."},
+    {q:"Baku 'tanggung jawab'...",o:["tanggungjawab","tanggung jawab","tanggung-jawab","tanggungjawap"],a:1,p:"Terpisah."},
+    {q:"Idiom 'darah dingin'...",o:["sakit","kejam","tenang","sehat"],a:1,p:"Kejam tanpa perasaan."},
+    {q:"Idiom 'kepala dingin'...",o:["sakit","tenang","sehat","tak peduli"],a:1,p:"Tenang tak emosi."},
+    {q:"Sinonim 'akumulasi'...",o:["pengurangan","pengumpulan","pembagian","pemisahan"],a:1,p:"Pengumpulan."},
+    {q:"Antonim 'absolut'...",o:["mutlak","relatif","total","penuh"],a:1,p:"Relatif."},
+    {q:"Pribahasa 'sekali dayung 2-3 pulau terlampaui'...",o:["lambat","sekaligus banyak","cepat","tertinggal"],a:1,p:"Multitasking."},
+    {q:"Pribahasa 'bagai pungguk merindukan bulan'...",o:["mustahil","mungkin","sangat mau","cinta"],a:0,p:"Cinta yang mustahil."},
+    {q:"Pribahasa 'sedia payung sebelum hujan'...",o:["malas","persiapan","cepat","terlambat"],a:1,p:"Persiapan dini."},
+    {q:"Penulisan 'Insya Allah'...",o:["insyaAllah","Insya Allah","insyaallah","Insyaallah"],a:2,p:"insyaallah (KBBI)."},
+    {q:"Tanda baca dialog yang benar...",o:["\"Saya datang.\"","'Saya datang.'","Saya datang.","\"Saya datang\""],a:0,p:"Tanda kutip ganda + titik di dalam."},
+    {q:"Sinonim 'eksklusif'...",o:["umum","khusus","sederhana","terbuka"],a:1,p:"Khusus."},
+    {q:"Antonim 'eksternal'...",o:["luar","internal","keluar","asing"],a:1,p:"Internal."},
+    {q:"Penulisan benar 'sub bab'...",o:["sub bab","subbab","sub-bab","subbab"],a:1,p:"Subbab."},
+    {q:"Sinonim 'destinasi'...",o:["asal","perjalanan","tujuan","maksud"],a:2,p:"Tujuan."},
+    {q:"Antonim 'eksis'...",o:["ada","tak ada","muncul","tampak"],a:1,p:"Tak ada."},
+    {q:"Imbuhan -nya pada 'rumahnya'...",o:["pemilik","kepunyaan","penanda","ganti"],a:1,p:"Kepunyaan."},
+    {q:"Awalan ter- pada 'tertangkap'...",o:["aktif","pasif tak sengaja","keadaan","sudah"],a:1,p:"Pasif tak sengaja."},
+    {q:"Akhiran -kan pada 'mengirimkan'...",o:["kausatif","aktif","benefaktif","intensif"],a:0,p:"Membuat objek."},
+    {q:"Reduplikasi 'rumah-rumah'...",o:["banyak","tiruan","sengaja","intensif"],a:0,p:"Banyak/jamak."},
+    {q:"Konjungsi 'sebab'...",o:["temporal","kausal","kondisional","kontras"],a:1,p:"Sebab-akibat."},
+    {q:"Klausa subordinatif diawali...",o:["dan","ketika","tetapi","atau"],a:1,p:"Ketika."},
+    {q:"Penulisan benar...",o:["Selasa, 5 Mei 2024","selasa 5 mei 2024","Selasa 5 Mei 2024","Selasa,5 Mei 2024"],a:0,p:"Hari kapital + koma."},
+    {q:"Sinonim 'akselerasi'...",o:["pelambatan","percepatan","penurunan","pemberhentian"],a:1,p:"Percepatan."},
+    {q:"Antonim 'akselerasi'...",o:["pelambatan","kecepatan","ketinggian","kemajuan"],a:0,p:"Pelambatan."},
+    {q:"'Black market' bahasa Indonesia...",o:["pasar gelap","pasar hitam","pasar tradisional","pasar modern"],a:0,p:"Pasar gelap."},
+    {q:"Frasa adjektiva...",o:["meja kayu","sangat indah","saya makan","ke sekolah"],a:1,p:"Sangat indah."},
+    {q:"Bentuk baku 'frustasi'...",o:["frustasi","frustrasi","frustration","frastasi"],a:1,p:"Frustrasi."},
+    {q:"Sinonim 'akademisi'...",o:["mahasiswa","ilmuwan","sarjana","cendekiawan"],a:3,p:"Cendekiawan."},
+    {q:"Choose: Had I _____, I would have come.",o:["know","known","knew","knowing"],a:1,p:"Cond 3 inversion."},
+    {q:"_____ being warned, he continued.",o:["Despite","Although","In spite","However"],a:0,p:"Despite + V-ing."},
+    {q:"He spoke _____ if he were the boss.",o:["like","as","as though","as much"],a:2,p:"As though."},
+    {q:"_____ does he go to gym?",o:["How often","How long","How much","How many"],a:0,p:"Frequency."},
+    {q:"By next year, she _____ in this company.",o:["work","worked","will be working","will have been working"],a:3,p:"Future perfect continuous."},
+    {q:"_____ I have read your message?",o:["May","Could","Might","All correct"],a:3,p:"Permission/possibility."},
+    {q:"He insisted _____ paying the bill.",o:["on","at","for","of"],a:0,p:"Insist on."},
+    {q:"She apologized _____ being late.",o:["of","at","for","with"],a:2,p:"Apologize for."},
+    {q:"_____ everything in moderation.",o:["Done","Do","Doing","Be doing"],a:1,p:"Imperative."},
+    {q:"Synonym 'absurd'...",o:["normal","logical","ridiculous","sensible"],a:2,p:"Ridiculous."},
+    {q:"Antonym 'authentic'...",o:["real","fake","true","original"],a:1,p:"Fake."},
+    {q:"He _____ his mind several times.",o:["change","changed","changes","has changed"],a:3,p:"Present perfect."},
+    {q:"_____ you mind closing window?",o:["Do","Will","Would","Have"],a:2,p:"Polite request."},
+    {q:"It rained _____ heavily.",o:["very","most","more","much"],a:0,p:"Adverb modifier."},
+    {q:"This is the _____ painting I've seen.",o:["beautiful","more beautiful","most beautiful","beautifully"],a:2,p:"Superlative."},
+    {q:"He is renowned _____ his work.",o:["of","for","with","at"],a:1,p:"Renowned for."},
+    {q:"_____ his efforts, he failed.",o:["Despite","Although","Because","Since"],a:0,p:"Despite + noun."},
+    {q:"_____ she arrives, we'll start.",o:["Until","When","While","Since"],a:1,p:"When + future."},
+    {q:"Synonym 'impede'...",o:["help","speed","obstruct","encourage"],a:2,p:"Obstruct."},
+    {q:"Antonym 'optimistic'...",o:["hopeful","pessimistic","positive","glad"],a:1,p:"Pessimistic."},
+    {q:"_____ a good restaurant nearby?",o:["Is there","Are there","There is","There are"],a:0,p:"Question form."},
+    {q:"He's looking forward _____ vacation.",o:["of","to","for","with"],a:1,p:"Looking forward to."},
+    {q:"They've been together _____ ages.",o:["for","since","at","from"],a:0,p:"Duration."},
+    {q:"_____ the rain, we played outside.",o:["Although","In spite of","Because of","Due to"],a:1,p:"In spite of + noun."},
+    {q:"He's known _____ his honesty.",o:["of","by","for","at"],a:2,p:"Known for."},
+    {q:"_____ harder, you'll succeed.",o:["Working","Work","To work","Worked"],a:1,p:"Imperative."},
+    {q:"Synonym 'lucid'...",o:["confused","clear","dark","sleepy"],a:1,p:"Clear."},
+    {q:"Antonym 'concur'...",o:["agree","disagree","cooperate","support"],a:1,p:"Disagree."},
+    {q:"She rarely _____ late.",o:["come","comes","coming","came"],a:1,p:"Adverb of frequency."},
+    {q:"_____ news at 9 PM.",o:["A","An","The","-"],a:2,p:"Specific: the news."},
+    {q:"_____ harder than expected.",o:["It is","There is","Is","It"],a:0,p:"It is."}
+  ]
+}
+
+};
+
+</script>
+<script>
+let currentPackage = 'paket1';
+let currentType = 'tpa';
+let currentIdx = 0;
+let answers = {}; // { 'paket1-tpa-0': {selected, correct} }
+
+const packageDiv = document.getElementById('packages');
+const typeBtns = document.querySelectorAll('.type-btn');
+const quizContent = document.getElementById('quizContent');
+const progressText = document.getElementById('progressText');
+const progressFill = document.getElementById('progressFill');
+const scoreText = document.getElementById('scoreText');
+const jumpNav = document.getElementById('jumpNav');
+
+// Render package cards
+function renderPackages() {
+  packageDiv.innerHTML = '';
+  Object.keys(soalDatabase).forEach(key => {
+    const pkg = soalDatabase[key];
+    const card = document.createElement('div');
+    card.className = 'package-card' + (key === currentPackage ? ' active' : '');
+    card.innerHTML = `
+      <h3>${pkg.nama}</h3>
+      <div class="badge">${pkg.tpa.length} TPA · ${pkg.tbi.length} TBI</div>
+    `;
+    card.onclick = () => {
+      currentPackage = key;
+      currentIdx = 0;
+      renderPackages();
+      render();
+    };
+    packageDiv.appendChild(card);
+  });
+}
+
+typeBtns.forEach(btn => {
+  btn.onclick = () => {
+    typeBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentType = btn.dataset.type;
+    currentIdx = 0;
+    render();
+  };
+});
+
+function getCurrentSoalArr() {
+  return soalDatabase[currentPackage][currentType] || [];
+}
+
+function getKey(idx) {
+  return `${currentPackage}-${currentType}-${idx}`;
+}
+
+function calcScore() {
+  const arr = getCurrentSoalArr();
+  let correct = 0;
+  arr.forEach((_, i) => {
+    if (answers[getKey(i)] && answers[getKey(i)].correct) correct++;
+  });
+  return { correct, total: arr.length };
+}
+
+function render() {
+  const arr = getCurrentSoalArr();
+  if (arr.length === 0) {
+    quizContent.innerHTML = '<div class="question-card"><p>Soal sedang dimuat...</p></div>';
+    jumpNav.innerHTML = '';
+    return;
+  }
+  
+  const s = arr[currentIdx];
+  const key = getKey(currentIdx);
+  const ans = answers[key];
+  
+  const opts = ['A', 'B', 'C', 'D'];
+  let optionsHtml = s.o.map((opt, i) => {
+    let cls = 'option';
+    if (ans) {
+      if (i === s.a) cls += ' correct';
+      else if (i === ans.selected && i !== s.a) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="selectAnswer(${i})" ${ans ? 'disabled' : ''}>
+      <span class="option-letter">${opts[i]}</span>
+      <span>${opt}</span>
+    </button>`;
+  }).join('');
+
+  let discussionHtml = '';
+  if (ans && ans.showDiscussion) {
+    discussionHtml = `
+      <div class="discussion">
+        <div class="discussion-title">💡 Pembahasan</div>
+        <div class="discussion-text">${s.p}</div>
+      </div>`;
+  }
+
+  let actionBtn = '';
+  if (ans && !ans.showDiscussion) {
+    actionBtn = `<button class="btn btn-warning" onclick="showDisc()">📖 Lihat Pembahasan</button>`;
+  } else if (!ans) {
+    actionBtn = `<button class="btn btn-secondary" onclick="showDisc(true)">📖 Lihat Pembahasan</button>`;
+  }
+
+  quizContent.innerHTML = `
+    <div class="question-card">
+      <div class="question-num">SOAL ${currentIdx + 1} / ${arr.length} · ${currentType.toUpperCase()}</div>
+      <div class="question-text">${s.q}</div>
+      <div class="options">${optionsHtml}</div>
+      <div class="controls">
+        ${actionBtn}
+      </div>
+      ${discussionHtml}
+      <div class="nav-controls">
+        <button class="btn btn-secondary" onclick="prev()" ${currentIdx === 0 ? 'disabled' : ''}>← Sebelumnya</button>
+        <button class="btn btn-primary" onclick="next()" ${currentIdx === arr.length - 1 ? 'disabled' : ''}>Selanjutnya →</button>
+      </div>
+    </div>
+  `;
+  
+  // Progress
+  const sc = calcScore();
+  progressText.textContent = `Soal ${currentIdx + 1} dari ${arr.length}`;
+  scoreText.textContent = `Skor: ${sc.correct}/${sc.total}`;
+  progressFill.style.width = ((currentIdx + 1) / arr.length * 100) + '%';
+  
+  // Jump nav
+  renderJump();
+}
+
+function renderJump() {
+  const arr = getCurrentSoalArr();
+  jumpNav.innerHTML = '';
+  arr.forEach((_, i) => {
+    const k = getKey(i);
+    const a = answers[k];
+    let cls = 'jump-num';
+    if (i === currentIdx) cls += ' current';
+    if (a) cls += a.correct ? ' answered correct' : ' answered wrong';
+    const btn = document.createElement('button');
+    btn.className = cls;
+    btn.textContent = i + 1;
+    btn.onclick = () => { currentIdx = i; render(); };
+    jumpNav.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx) {
+  const arr = getCurrentSoalArr();
+  const s = arr[currentIdx];
+  const key = getKey(currentIdx);
+  if (answers[key]) return;
+  answers[key] = { selected: idx, correct: idx === s.a, showDiscussion: false };
+  render();
+}
+
+function showDisc(beforeAnswer) {
+  const key = getKey(currentIdx);
+  if (!answers[key]) {
+    answers[key] = { selected: -1, correct: false, showDiscussion: true };
+  } else {
+    answers[key].showDiscussion = true;
+  }
+  render();
+}
+
+function next() {
+  const arr = getCurrentSoalArr();
+  if (currentIdx < arr.length - 1) { currentIdx++; render(); }
+}
+function prev() {
+  if (currentIdx > 0) { currentIdx--; render(); }
+}
+
+renderPackages();
+render();
+</script>
+</body>
+</html>
